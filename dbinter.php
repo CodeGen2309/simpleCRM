@@ -1,5 +1,6 @@
 <?
 class dbInterface {
+  // UPDATED FROM VSCODE
   public $dbConn;
 
   public function __construct () {
