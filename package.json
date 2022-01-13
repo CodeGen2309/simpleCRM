@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "axios": "^0.24.0",
+    "basic-ftp": "^4.6.6",
+    "gulp": "^4.0.2",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vue3-draggable": "^2.0.9"
