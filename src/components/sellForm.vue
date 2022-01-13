@@ -2,18 +2,18 @@
   <ul class="sellForm">
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">№</span>
-      <span class="sellForm__cell sellForm__cell_value">1232</span>
+      <span class="sellForm__cell sellForm__cell_value">{{saleID}}</span>
     </li>
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">Товар</span>
       <span class="sellForm__cell sellForm__cell_value">
-        <input class="sellForm__input" type="text">
+        <input class="sellForm__input" type="text" v-model="saleName">
       </span>
     </li> 
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">Цена товара</span>
       <span class="sellForm__cell sellForm__cell_value">
-        <input class="sellForm__input" type="number">
+        <input class="sellForm__input" type="number" v-model="salePrice">
         <span>₽</span>
       </span>
     </li>
@@ -21,35 +21,36 @@
       <span class="sellForm__cell sellForm__cell_title">Поставщик</span>
       <span class="sellForm__cell sellForm__cell_value">
         <select class="sellForm__select">
-          <option class="sellForm__selectItem" value="1">СтолГрупп</option>
-          <option class="sellForm__selectItem" value="2">СтолЭндКомпани</option>
-          <option class="sellForm__selectItem" value="3">СтолЭндСтулКорп</option>
-          <option class="sellForm__selectItem" value="4">ХардманСпектр</option>
-          <option class="sellForm__selectItem" value="5">СтолСолюшн</option>
+          <option class="sellForm__selectItem"
+            v-for="supp in suppsArr" :key="supp" :value="supp.ID"
+            :selected="supp.ID == supplierID">
+            {{supp.NAME}}
+          </option>
         </select>
       </span>
     </li>
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">Город</span>
       <span class="sellForm__cell sellForm__cell_value">
-        <input class="sellForm__input" type="text">
+        <input class="sellForm__input" type="text" v-model="city">
       </span>
     </li>
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">Дата заказа</span>
       <span class="sellForm__cell sellForm__cell_value">
-        <input class="sellForm__dateInput" type="date">
+        <input class="sellForm__dateInput" type="datetime" v-model="orderDate">
       </span>
     </li>
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">Статус</span>
       <span class="sellForm__cell sellForm__cell_value">
         <select class="sellForm__select">
-          <option class="sellForm__selectItem" value="1">Ждем первую поставку</option>
-          <option class="sellForm__selectItem" value="2">Перерыв в отношениях</option>
-          <option class="sellForm__selectItem" value="3">Обиделись</option>
-          <option class="sellForm__selectItem" value="4">Задерживают поставку</option>
-          <option class="sellForm__selectItem" value="5">Отгрузка</option>
+          <option class="sellForm__selectItem"
+            v-for="step in stepsArr" :key="step"
+            :selected="stepID == step.ID"
+            :value="step.ID">
+            {{step.NAME}}
+          </option>
         </select>
       </span>
     </li>
@@ -58,8 +59,29 @@
 
 <script>
 export default {
-  props: ['saleID', 'saleName', 'salePrice', 'supplierID', 'city', 'orderDate', 'stepID', 'suppsArr','stepsArr', ],
+  props: [
+    'saleID', 'saleName', 'salePrice', 'supplierID',
+    'city', 'orderDate', 'stepID', 'suppsArr','stepsArr'
+  ],
+
   data: () => ({}),
+
+  methods: {
+    getData () {
+      let formData = {'id': '', 'name': '', 'price': '',
+      'supplier': '', 'city': '', 'orderDate': '', 'step': ''}
+
+      formData.id = this.saleID
+      formData.name = this.saleName
+      formData.price = this.salePrice
+      formData.supplier = this.supplierID
+      formData.city = this.city
+      formData.orderDate = this.orderDate
+      formData.step = this.stepID
+
+      return formData
+    }
+  },
 }
 </script>
 

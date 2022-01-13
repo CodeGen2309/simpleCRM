@@ -1,8 +1,9 @@
 <template>
   <div class="sideCard" :class="{'sideCard_closed': !isOpened}">
-    <sellForm class = 'sideCard__form'
+    <sellForm class='sideCard__form' ref='sellForm'
       :saleID="cardData.ID" :saleName='cardData.NAME' :salePrice="cardData.PRICE"
-      :supplierID="cardData.SUPPLIER_ID" :city="cardData.CITY" :orderDate="cardData.CREATE_DATE" :stepID="cardData.STATUS_ID">
+      :supplierID="cardData.SUPPLIER_ID" :city="cardData.CITY" :orderDate="cardData.CREATE_DATE"
+      :stepID="cardData.STATUS_ID" :stepsArr="steps" :suppsArr="suppliers">
     </sellForm>
 
     <sellTable
@@ -15,7 +16,7 @@
       class="sideCard__table" ref="costTable"
       @cellChanged = 'getCosts' tableHeader="Расходы" :tableSize="[4, 2]">
     </sellTable>  
-    <p class="sideCard__priceTag">Всего: {{cardData}}</p>
+    <p class="sideCard__priceTag">Всего: {{totalIncome}}</p>
     <p class="sideCard__total">Итого: {{totalIncome + totalCost}}</p>
 
     <ul class="sideCard__footNotes">
@@ -31,7 +32,12 @@
     </ul>
 
 
-    <div class="optButtons"></div>
+    <div class="optButtons">
+      <button class="headNav__addButton sideCard__button" @click="saveData">Сохранить</button>
+      <button class="headNav__addButton sideCard__button"
+        @click="$emit('closeEvent')">Закрыть
+      </button>
+    </div>
   </div>
 </template>
 
@@ -41,6 +47,7 @@ import sellTable from "./sellTable.vue";
 
 
 export default {
+  emits: ['closeEvent', ],
   props: ['cardData', 'suppliers', 'steps'],
   components: {sellForm, sellTable},
 
@@ -49,7 +56,12 @@ export default {
   }),
 
   methods: {
-    toggleCard () {this.isOpened = !this.isOpened}
+    toggleCard () {this.isOpened = !this.isOpened},
+    saveData () {
+      let res = this.$refs.incomeTable.getTableData()
+
+      console.log(res)
+    }
   },
 }
 </script>
@@ -92,4 +104,6 @@ export default {
     border: none; outline: none;
     border-bottom: 1px solid black;
   }
+
+  .sideCard__button {margin: 0 20px 0 0}
 </style>

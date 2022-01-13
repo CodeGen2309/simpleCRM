@@ -85,9 +85,10 @@
     transition: .3s;
   }
 
-  .headNav__addButton:hover {
-    background: #66a5e1;
-  }
+  .headNav__addButton:hover {background: #66a5e1}
+  .headNav__addButton_green {background: green}
+  .headNav__addButton_green:hover {background: #2ecc71}
+
 
   .headNav__icon {
     display: flex;

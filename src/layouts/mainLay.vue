@@ -1,6 +1,6 @@
 <template>
   <section class="defLay">
-    <head-nav class="defLay__header" :items="menuItems" @addClick = 'openCard'>
+    <head-nav class="defLay__header" :items="menuItems" @addClick='toggleCard'>
     </head-nav>
 
     <div class="defLay__content">
@@ -11,11 +11,11 @@
 
 
     <transition name = 'backAnim'>
-      <div v-if="cardIsOpened" class="sideCard__back" @click="openCard"></div>
+      <div v-if="cardIsOpened" class="sideCard__back" @click="toggleCard"></div>
     </transition>
 
     <sideCard ref='sideCard' :cardData="cardData"
-      :steps="salesteps" :suppliers="supps">
+      :steps="salesteps" :suppliers="supps" @closeEvent="toggleCard">
     </sideCard>
   </section>
 </template>
@@ -48,7 +48,7 @@ export default {
   }),
 
   methods: {
-    openCard () {
+    toggleCard () {
       this.cardIsOpened = !this.cardIsOpened
       this.$refs.sideCard.toggleCard()
     },
@@ -115,7 +115,8 @@ export default {
   .defLay__content {}
 
   .defLay__view {
-    height: 100%;
+    height: calc(100vh - 60px);
+    overflow: scroll;
     box-sizing: border-box;
     transition: .3s;
   }

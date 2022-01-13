@@ -45,13 +45,9 @@ export default {
   methods: {
     addRow (index) {
       let colCount = this.tableArr[0]['data'].length
-      let newRow = {
-        color: '',
-        data: [],
-      }
+      let newRow = {color: '', data: [],}
 
       for (let i = 0; i < colCount; i++) {newRow.data.push('')}
-      
       this.tableArr.splice(index, 0, newRow)
     },
 
@@ -64,13 +60,9 @@ export default {
     },
 
     getTableData () {
-      let tableData = []
+      let res = JSON.stringify(this.tableArr)
 
-      for (let row of this.tableArr) {
-        tableData.push(row.data)
-      }
-
-      return tableData
+      return res
     }
   },
 
