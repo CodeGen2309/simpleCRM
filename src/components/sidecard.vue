@@ -22,12 +22,12 @@
     <ul class="sideCard__footNotes">
       <li class="sideCard__footItem">
         <span class="sideCard__footName">Трек номер</span>
-        <input class="sideCard__footInput" type="text">
+        <input class="sideCard__footInput" type="text" v-model="trackNumber">
       </li>
       
       <li class="sideCard__footItem">
         <span class="sideCard__footName">Дата прихода</span>
-        <input class="sideCard__footInput" type="text">
+        <input class="sideCard__footInput" type="text" v-model="incomeDate">
       </li>
     </ul>
 
@@ -53,14 +53,21 @@ export default {
 
   data: () => ({
     isOpened: false,
+    trackNumber: '',
+    incomeDate: '',
   }),
 
   methods: {
     toggleCard () {this.isOpened = !this.isOpened},
     saveData () {
-      let res = this.$refs.incomeTable.getTableData()
+      let income = this.$refs.incomeTable.getTableData()
+      let costs = this.$refs.costTable.getTableData()
 
-      console.log(res)
+      console.log(income)
+      console.log(costs)
+      console.log(this.trackNumber)
+      console.log(this.incomeDate)
+
     }
   },
 }

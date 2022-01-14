@@ -60,9 +60,7 @@ export default {
     },
 
     getTableData () {
-      let res = JSON.stringify(this.tableArr)
-
-      return res
+      return JSON.stringify(this.tableArr)
     }
   },
 
