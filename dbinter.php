@@ -44,7 +44,6 @@ class dbInterface {
     return $this -> getTable($table);
   }
 
-
   public function rewriteTable ($tableName, $newData) {
     $truncateQuery = "TRUNCATE TABLE $tableName";
     $truncateItem = $this -> dbConn -> prepare($truncateQuery);
@@ -74,6 +73,10 @@ class dbInterface {
     return $res;
   }
 
+  public function addSale($saleData) {
+    $data = json_decode($_POST['data']);
+  }
+
   public function sendResponse () {
     $postData = json_decode($_POST['data']);
     $action = $postData -> action;
@@ -98,8 +101,13 @@ class dbInterface {
       $cells = $postData -> cells;
       $res = $this -> rewriteTable($tableName, $cells);
     }
+
+    if ($action == 'addSale') {
+      $tableData = $postData -> tableData;
+      $res = $this -> addSale($tableData);
+    }
     
-    print_r(json_encode($res));
+    print_r($res);
   }
 }
 

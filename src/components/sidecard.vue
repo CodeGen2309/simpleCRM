@@ -27,7 +27,7 @@
       
       <li class="sideCard__footItem">
         <span class="sideCard__footName">Дата прихода</span>
-        <input class="sideCard__footInput" type="text" v-model="cardData.ARRIVAL_DATE">
+        <input class="sideCard__footInput" type="date" v-model="cardData.ARRIVAL_DATE">
       </li>
     </ul>
 
@@ -55,13 +55,16 @@ export default {
     isOpened: false,
     totalIncome: 0,
     totalCost: 0,
-    total: 0
   }),
+
+  computed: {
+    total () {return this.totalIncome + this.totalCost}
+  },
 
   methods: {
     toggleCard () {this.isOpened = !this.isOpened},
-    saveData () {
-      let income, costs, form, resultArr
+    async saveData () {
+      let income, costs, form, resultArr, res
 
       form  = this.$refs.sellForm.getData()
       income = this.$refs.incomeTable.getTableData()
@@ -76,13 +79,13 @@ export default {
       resultArr.STATUS_ID = form.step
       resultArr.INCOME_TABLE = income
       resultArr.COSTS_TABLE = costs
-      resultArr.TOTAL = ''
+      resultArr.TOTAL = this.total
       resultArr.TRACK_NUMBER = this.cardData.TRACK_NUMBER
       resultArr.ARRIVAL_DATE = this.cardData.ARRIVAL_DATE
       resultArr.COMMENT = this.cardData.COMMENT
 
-      console.log(form)
-      console.log(resultArr)
+      res = await this.$base.addSale(resultArr)
+      console.log(res)
 
       return resultArr
     },

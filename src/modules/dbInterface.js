@@ -27,6 +27,12 @@ let inter = {
     let res = await this.sendRequest(data)
     return res
   },
+
+  async addSale (tableData) {
+    let data = {action: 'addSale', tableData}
+    let res = await this.sendRequest(data)
+    return res
+  }
 }
 
 export default {

@@ -38,7 +38,7 @@
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">Дата заказа</span>
       <span class="sellForm__cell sellForm__cell_value">
-        <input class="sellForm__dateInput" type="datetime" v-model="orderDate">
+        <input class="sellForm__dateInput" type="date" v-model="orderDate">
       </span>
     </li>
     <li class="sellForm__row">
@@ -97,16 +97,9 @@ export default {
     padding: 10px 0;
   }
 
-  .sellForm__cell {
-    width: 50%;
-  }
-
-  .sellForm__cell_title {
-    color: gray;
-  }
-
+  .sellForm__cell {width: 50%}
+  .sellForm__cell_title {color: gray}
   .sellForm__cell_value {}
-
   .sellForm__input {
     border: none; outline: none;
     border-bottom: 1px solid gray;
@@ -116,8 +109,7 @@ export default {
     padding: 10px 0;
     border: none; outline: none;
     border-bottom: 1px solid gray;
-    background: none;
-    max-width: 200px;
+    background: none; max-width: 200px;
   }
 
   .sellForm__dateInput {
