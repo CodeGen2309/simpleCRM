@@ -72,18 +72,15 @@ export default {
     },
 
     async getSales () {
-      let res = await this.$base.getTable('SALES')
-      return res
+      return await this.$base.getTable('SALES')
     },
 
     async getSaleSteps () {
-      let res = await this.$base.getTable('SALESTEPS')
-      return res
+      return await this.$base.getTable('SALESTEPS')
     },
 
     async getSupps () {
-      let res = await this.$base.getTable('SUPPLIERS')
-      return res
+      return await this.$base.getTable('SUPPLIERS')
     },
   },
 

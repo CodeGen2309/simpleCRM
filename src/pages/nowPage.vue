@@ -52,10 +52,7 @@ export default {
     background: #ecf0f1;
   }
 
-  .nowPage__step {
-    max-width: 250px;
-  }
-
+  .nowPage__step {max-width: 250px}
   .step {
     display: flex;
     flex-direction: column;
@@ -101,15 +98,18 @@ export default {
     margin: 0; padding: 0;
     font-weight: 700;
   }
+
   .step__sellId {
     margin: 10px 0; padding: 0;
     font-weight: 300;
     font-size: 12px;
   }
+
   .step__sellPrice {
     background: gainsboro;
     padding: 5px 10px;
     border-radius: 10px;
   }
+  
   .step__sellNote {}
 </style>

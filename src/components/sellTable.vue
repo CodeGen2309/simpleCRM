@@ -4,19 +4,20 @@
 
     <ul class="sTable">
       <li class="sTable__row" v-for="(row, rowIndex) in tableArr" :key="row[0]">
-
         <span class="sTable__cell sTable__cell_addRow" @click="addRow(rowIndex + 1)">+</span>
 
         <span class="sTable__cell"
           v-for="(cell, cellIndex) in row.data" :key="cell"
-          @change="$emit('cellChanged')"
           :style = '{background: row.color}'
           :class="{
             'sTable__cell_lastRow': rowIndex == tableArr.length - 1,
             'sTable__cell_first': cellIndex == 0,
           }">
 
-          <input class="sTable__input" type="text" v-model.lazy="tableArr[rowIndex]['data'][cellIndex]">
+          <input class="sTable__input" type="text"
+            @change="$emit('cellChanged', rowIndex, cellIndex, tableArr[rowIndex]['data'][cellIndex])"
+            v-model.lazy="tableArr[rowIndex]['data'][cellIndex]"
+          >
         </span>
 
         <span class="sTable__cell sTable__cell_color"
@@ -37,6 +38,7 @@
 <script>
 export default {
   props: ['tableData', 'tableSize', 'tableHeader'],
+  emits: ['cellChanged', ],
 
   data: () => ({
     tableArr : [],
@@ -60,13 +62,17 @@ export default {
     },
 
     getTableData () {
-      return JSON.stringify(this.tableArr)
+      let res
+
+      if (this.tableArr[0]['data'][0] == '') {res = null}
+      else {res = JSON.stringify(this.tableArr)}
+      return res
     }
   },
 
   created () {
     if (this.tableData != undefined) {
-      this.tableArr = this.tableData
+      this.tableArr = JSON.parse(this.tableData)
     }
 
     if (this.tableSize != undefined) {
@@ -131,6 +137,7 @@ export default {
     border: 1px solid gainsboro;
     background: gainsboro;
     width: 20px;
+    max-width: 20px;
 
     cursor: pointer;
     transition: .3s;

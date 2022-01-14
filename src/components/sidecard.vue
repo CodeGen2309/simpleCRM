@@ -8,31 +8,31 @@
 
     <sellTable
       class="sideCard__table" ref='incomeTable' tableHeader="Доходы"
-      @cellChanged = 'getCosts' :tableSize="[4, 2]">
+      @cellChanged='onCellChange' :tableSize="[4,2]">
     </sellTable>
     <p class="sideCard__priceTag">Всего: {{totalIncome}}</p>
 
     <sellTable
       class="sideCard__table" ref="costTable"
-      @cellChanged = 'getCosts' tableHeader="Расходы" :tableSize="[4, 2]">
+      @cellChanged='onCellChange' tableHeader="Расходы" :tableSize="[4, 2]">
     </sellTable>  
-    <p class="sideCard__priceTag">Всего: {{totalIncome}}</p>
+    <p class="sideCard__priceTag">Всего: {{totalCost}}</p>
     <p class="sideCard__total">Итого: {{totalIncome + totalCost}}</p>
 
     <ul class="sideCard__footNotes">
       <li class="sideCard__footItem">
         <span class="sideCard__footName">Трек номер</span>
-        <input class="sideCard__footInput" type="text" v-model="trackNumber">
+        <input class="sideCard__footInput" type="text" v-model="cardData.TRACK_NUMBER">
       </li>
       
       <li class="sideCard__footItem">
         <span class="sideCard__footName">Дата прихода</span>
-        <input class="sideCard__footInput" type="text" v-model="incomeDate">
+        <input class="sideCard__footInput" type="text" v-model="cardData.ARRIVAL_DATE">
       </li>
     </ul>
 
 
-    <div class="optButtons">
+    <div class="sideCard__optButtons">
       <button class="headNav__addButton sideCard__button" @click="saveData">Сохранить</button>
       <button class="headNav__addButton sideCard__button"
         @click="$emit('closeEvent')">Закрыть
@@ -53,21 +53,66 @@ export default {
 
   data: () => ({
     isOpened: false,
-    trackNumber: '',
-    incomeDate: '',
+    totalIncome: 0,
+    totalCost: 0,
+    total: 0
   }),
 
   methods: {
     toggleCard () {this.isOpened = !this.isOpened},
     saveData () {
-      let income = this.$refs.incomeTable.getTableData()
-      let costs = this.$refs.costTable.getTableData()
+      let income, costs, form, resultArr
 
-      console.log(income)
-      console.log(costs)
-      console.log(this.trackNumber)
-      console.log(this.incomeDate)
+      form  = this.$refs.sellForm.getData()
+      income = this.$refs.incomeTable.getTableData()
+      costs = this.$refs.costTable.getTableData()
 
+      resultArr = {}
+      resultArr.NAME = form.name
+      resultArr.PRICE = form.price
+      resultArr.SUPPLIER_ID = form.supplier
+      resultArr.CITY = form.city
+      resultArr.CREATE_DATE = form.orderDate
+      resultArr.STATUS_ID = form.step
+      resultArr.INCOME_TABLE = income
+      resultArr.COSTS_TABLE = costs
+      resultArr.TOTAL = ''
+      resultArr.TRACK_NUMBER = this.cardData.TRACK_NUMBER
+      resultArr.ARRIVAL_DATE = this.cardData.ARRIVAL_DATE
+      resultArr.COMMENT = this.cardData.COMMENT
+
+      console.log(form)
+      console.log(resultArr)
+
+      return resultArr
+    },
+
+    onCellChange(row, col, value) {
+      if (col == 0) {this.getTotal()}
+    },
+
+    getTotal () {
+      let incomeTable, costsTable
+      let income = 0
+      let costs = 0
+
+      incomeTable = this.$refs.incomeTable.getTableData()
+      incomeTable = JSON.parse(incomeTable)
+
+      costsTable = this.$refs.costTable.getTableData()
+      costsTable = JSON.parse(costsTable)
+      
+      if (incomeTable != null) {
+        incomeTable.forEach(row => income += Number(row.data[0]))
+      }
+
+      if (costsTable != null) {
+        costsTable.forEach(row => costs += Number(row.data[0]))
+      }
+
+      this.totalIncome = income
+      this.totalCost = costs
+      this.total = income - costs
     }
   },
 }
