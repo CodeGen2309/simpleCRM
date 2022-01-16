@@ -8,13 +8,13 @@
 
     <sellTable
       class="sideCard__table" ref='incomeTable' tableHeader="Доходы"
-      @cellChanged='onCellChange' :tableSize="[4,2]">
+      @cellChanged='onCellChange' :tableData="cardData.INCOME_TABLE">
     </sellTable>
     <p class="sideCard__priceTag">Всего: {{totalIncome}}</p>
 
     <sellTable
       class="sideCard__table" ref="costTable"
-      @cellChanged='onCellChange' tableHeader="Расходы" :tableSize="[4, 2]">
+      @cellChanged='onCellChange' tableHeader="Расходы" :tableData="cardData.COSTS_TABLE">
     </sellTable>  
     <p class="sideCard__priceTag">Всего: {{totalCost}}</p>
     <p class="sideCard__total">Итого: {{totalIncome + totalCost}}</p>
@@ -62,7 +62,13 @@ export default {
   },
 
   methods: {
-    toggleCard () {this.isOpened = !this.isOpened},
+    toggleCard () {
+      this.isOpened = !this.isOpened
+      this.$refs.incomeTable.updateData()
+      this.$refs.costTable.updateData()
+      this.getTotal()
+      },
+
     async saveData () {
       let income, costs, form, resultArr, res
 
@@ -85,8 +91,6 @@ export default {
       resultArr.COMMENT = this.cardData.COMMENT
 
       res = await this.$base.addSale(resultArr)
-      console.log(res)
-
       return resultArr
     },
 

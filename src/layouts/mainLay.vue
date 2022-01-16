@@ -91,7 +91,10 @@ export default {
 
     sales.forEach(item => this.sales.push(item))
     this.salesteps = steps
-    this.cardData = this.sales[0]
+
+    console.log(this.sales)
+    this.cardData = this.sales[7]
+
     this.supps = supps
   },
 }

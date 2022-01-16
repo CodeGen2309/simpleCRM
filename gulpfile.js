@@ -1,9 +1,11 @@
 let ftp = require('basic-ftp')
-const { uploadFrom } = require('basic-ftp/dist/transfer')
+
 
 async function deploy (done) {
-  let config, client, files
+  let config, client, localPath, remotePath
 
+  localPath = './dist'
+  remotePath = 'www/gergewebdev.ru'
   config = {
     host: '31.31.198.122',
     user: 'u1559320',
@@ -12,12 +14,9 @@ async function deploy (done) {
 
   client = new ftp.Client()
   await client.access(config)
-  await client.cd('www/gergewebdev.ru')
-  
-  files = await client.list()
-  console.log(files)
-  
-  await client.close()
+  await client.uploadFromDir(localPath, remotePath)
+
+  console.log('uploadFinished!!')
   done()
 }
 

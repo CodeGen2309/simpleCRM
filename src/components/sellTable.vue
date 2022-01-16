@@ -67,27 +67,32 @@ export default {
       if (this.tableArr[0]['data'][0] == '') {res = null}
       else {res = JSON.stringify(this.tableArr)}
       return res
-    }
+    },
+
+    updateData () {
+      if (this.tableData != undefined) {
+        this.tableArr = JSON.parse(this.tableData)
+
+      }
+
+      if (this.tableSize != undefined) {
+        let cols = this.tableSize[0]
+        let rows = this.tableSize[1]
+        let table = []
+
+        for (let i = 0; i < rows; i++) {
+          let row = {color: '', data: []}
+          for (let j = 0; j < cols; j++) { row.data.push('') }
+          table.push(row)
+        }
+
+        this.tableArr = table
+      }
+    },
   },
 
   created () {
-    if (this.tableData != undefined) {
-      this.tableArr = JSON.parse(this.tableData)
-    }
-
-    if (this.tableSize != undefined) {
-      let cols = this.tableSize[0]
-      let rows = this.tableSize[1]
-      let table = []
-
-      for (let i = 0; i < rows; i++) {
-        let row = {color: '', data: []}
-        for (let j = 0; j < cols; j++) { row.data.push('') }
-        table.push(row)
-      }
-
-      this.tableArr = table
-    }
+    this.updateData()
   }
 }
 </script>

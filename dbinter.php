@@ -16,6 +16,7 @@ class dbInterface {
       array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"),
     );
 
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $this -> dbConn = $conn;
     $this -> sendResponse();
   }
@@ -74,7 +75,29 @@ class dbInterface {
   }
 
   public function addSale($saleData) {
-    $data = json_decode($_POST['data']);
+    $ID = NULL;
+    $NAME = $saleData -> NAME;
+    $PRICE = $saleData -> PRICE;
+    $SUPPLIER_ID = $saleData -> SUPPLIER_ID;
+    $CITY = $saleData -> CITY;
+    $CREATE_DATE = $saleData -> CREATE_DATE;
+    $STATUS_ID = $saleData -> STATUS_ID;
+    $INCOME_TABLE = $saleData -> INCOME_TABLE;
+    $COSTS_TABLE = $saleData -> COSTS_TABLE;
+    $TRACK_NUMBER = $saleData -> TRACK_NUMBER;
+    $ARRIVAL_DATE = $saleData -> ARRIVAL_DATE;
+    $COMMENT = $saleData -> COMMENT;
+    $TEST = $saleData -> TEST;
+
+    if ($INCOME_TABLE == NULL) { $INCOME_TABLE = '{}'; }
+    if ($COSTS_TABLE == NULL) { $COSTS_TABLE = '{}'; }
+
+
+    $insertQuery = "INSERT INTO `SALES` (`ID`, `NAME`, `PRICE`, `SUPPLIER_ID`, `CITY`, `CREATE_DATE`, `STATUS_ID`, `INCOME_TABLE`, `COSTS_TABLE`, `TOTAL`, `TRACK_NUMBER`, `ARRIVAL_DATE`, `COMMENT`) VALUES ('$ID', '$NAME', '$PRICE', '$SUPPLIER_ID', '$CITY', '$CREATE_DATE', '$STATUS_ID', '$INCOME_TABLE', '$COSTS_TABLE', '$TOTAL', '$TRACK_NUMBER', '$ARRIVAL_DATE', '$COMMENT')";
+    $insertItem = $this -> dbConn -> prepare($insertQuery);
+    $res = $insertItem -> execute();
+    
+    return $res;
   }
 
   public function sendResponse () {
@@ -84,7 +107,6 @@ class dbInterface {
 
     
     if ($action == 'showTables') { $res = $this-> showTables(); }
-    
     if ($action == 'getTable') {
       $tableName = $postData -> tableName;
       $res = $this -> getTable($tableName);
@@ -107,7 +129,7 @@ class dbInterface {
       $res = $this -> addSale($tableData);
     }
     
-    print_r($res);
+    print_r(json_encode($res));
   }
 }
 
