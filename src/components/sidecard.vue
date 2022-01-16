@@ -64,19 +64,23 @@ export default {
   methods: {
     toggleCard () {
       this.isOpened = !this.isOpened
-      this.$refs.incomeTable.updateData()
-      this.$refs.costTable.updateData()
-      this.getTotal()
-      },
+
+      console.log(this.cardData)
+
+      if (this.isOpened) {
+        this.$refs.incomeTable.updateData()
+        this.$refs.costTable.updateData()
+        this.getTotal()
+      }
+    },
 
     async saveData () {
-      let income, costs, form, resultArr, res
+      let form  = await this.$refs.sellForm.getData()
+      let income = await this.$refs.incomeTable.getTableData()
+      let costs = await this.$refs.costTable.getTableData()
+      let resultArr = {}
+      let res
 
-      form  = this.$refs.sellForm.getData()
-      income = this.$refs.incomeTable.getTableData()
-      costs = this.$refs.costTable.getTableData()
-
-      resultArr = {}
       resultArr.NAME = form.name
       resultArr.PRICE = form.price
       resultArr.SUPPLIER_ID = form.supplier
@@ -91,6 +95,9 @@ export default {
       resultArr.COMMENT = this.cardData.COMMENT
 
       res = await this.$base.addSale(resultArr)
+
+      console.log(form)
+
       return resultArr
     },
 
@@ -103,23 +110,18 @@ export default {
       let income = 0
       let costs = 0
 
+      
+
       incomeTable = this.$refs.incomeTable.getTableData()
       incomeTable = JSON.parse(incomeTable)
+      incomeTable.forEach(row => income += Number(row.data[0]))
 
       costsTable = this.$refs.costTable.getTableData()
       costsTable = JSON.parse(costsTable)
-      
-      if (incomeTable != null) {
-        incomeTable.forEach(row => income += Number(row.data[0]))
-      }
-
-      if (costsTable != null) {
-        costsTable.forEach(row => costs += Number(row.data[0]))
-      }
+      costsTable.forEach(row => costs += Number(row.data[0]))
 
       this.totalIncome = income
       this.totalCost = costs
-      this.total = income - costs
     }
   },
 }

@@ -8,13 +8,13 @@
         <p class="step__note">25 сделок: 500 000 ₽</p>
       </div>
 
-      <draggable v-model="sells" class="step__sells">
+      <draggable v-model="sales[stepIndex + 1]" class="step__sells">
         <template v-slot:item='{ item }'>
-          <div class="step__sellItem">
-            <p class="step__sellTitle">{{item.name}}</p>
-            <p class="step__sellId">№ {{item.id}}</p>
-            <span class="step__sellPrice">{{item.price}} ₽</span>
-            <p class="step__sellNote">{{item.comments}}</p>
+          <div class="step__sellItem" @click="$emit('clickOnSale', item)">
+            <p class="step__sellTitle">{{item.NAME}}</p>
+            <p class="step__sellId">№ {{item.ID}}</p>
+            <span class="step__sellPrice">{{item.PRICE}} ₽</span>
+            <p class="step__sellNote">{{item.COMMENT}}</p>
           </div>
         </template>
       </draggable>
@@ -27,17 +27,37 @@ import draggable from 'vue3-draggable'
 
 export default {
   components: {draggable, },
+
   data: () => ({
     salesteps: [],
-    sells: [
-      {name: "Стол", id: '1838', price: '9220', comments: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, a!'},
-      {name: "Стол", id: '1838', price: '9220', comments: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, a!'},
-    ],
+    sales: {},
   }),
 
+  methods: {},
+
   async created () {
-    let res = await this.$base.getTable('SALESTEPS')
-    res.forEach(item => {this.salesteps.push(item.NAME)})
+    let stepsDB = await this.$base.getTable('SALESTEPS')
+    let salesDB = await this.$base.getTable('SALES')
+    let salesteps = []
+    let salesFilter = {}
+
+    stepsDB.forEach(item => {salesteps.push(item.NAME)})
+
+    stepsDB.forEach(step => {
+      salesFilter[step.ID] = []
+
+      salesDB.forEach(sale => {
+        if (step.ID == sale.STATUS_ID) {
+          salesFilter[step.ID].push(sale)
+        }
+      })
+    })
+
+    console.log(salesFilter)
+    console.log(salesteps);
+
+    this.salesteps = salesteps
+    this.sales = salesFilter
   }
 }
 </script>

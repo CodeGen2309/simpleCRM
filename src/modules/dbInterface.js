@@ -5,8 +5,9 @@ let inter = {
 
   async sendRequest (data) {
     let JSONData = JSON.stringify(data)
-    let restURL = 'dbinter.php'
-    let res = await this.connector.post(restURL, `data=${JSONData}`)
+    let prodURL = 'dbinter.php'
+    let devURL = 'https://gergewebdev.ru/dbinter.php'
+    let res = await this.connector.post(devURL, `data=${JSONData}`)
 
     return res.data
   },

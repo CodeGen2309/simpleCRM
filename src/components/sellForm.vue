@@ -20,7 +20,7 @@
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">Поставщик</span>
       <span class="sellForm__cell sellForm__cell_value">
-        <select class="sellForm__select">
+        <select class="sellForm__select" @change="changeSelect('supplier', $event)">
           <option class="sellForm__selectItem"
             v-for="supp in suppsArr" :key="supp" :value="supp.ID"
             :selected="supp.ID == supplierID">
@@ -44,7 +44,7 @@
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">Статус</span>
       <span class="sellForm__cell sellForm__cell_value">
-        <select class="sellForm__select">
+        <select class="sellForm__select" @change="changeSelect('step', $event)">
           <option class="sellForm__selectItem"
             v-for="step in stepsArr" :key="step"
             :selected="stepID == step.ID"
@@ -64,22 +64,29 @@ export default {
     'city', 'orderDate', 'stepID', 'suppsArr','stepsArr'
   ],
 
-  data: () => ({}),
+  data: () => ({
+    resArr: {},
+  }),
 
   methods: {
     getData () {
-      let formData = {'id': '', 'name': '', 'price': '',
-      'supplier': '', 'city': '', 'orderDate': '', 'step': ''}
+      return this.resArr
+    },
 
-      formData.id = this.saleID
-      formData.name = this.saleName
-      formData.price = this.salePrice
-      formData.supplier = this.supplierID
-      formData.city = this.city
-      formData.orderDate = this.orderDate
-      formData.step = this.stepID
+    changeSelect (selectName, event) {
+      this.resArr[selectName] = event.target.value
+    },
+  },
 
-      return formData
+  created () {
+    this.resArr = {
+      id: this.saleID ,
+      name: this.saleName,
+      price: this.salePrice,
+      supplier: this.supplierID,
+      city: this.city,
+      orderDate: this.orderDate,
+      step: this.stepID
     }
   },
 }

@@ -1,11 +1,13 @@
 <template>
   <section class="defLay">
-    <head-nav class="defLay__header" :items="menuItems" @addClick='toggleCard'>
+    <head-nav class="defLay__header" :items="menuItems" @addClick='createBlankSale'>
     </head-nav>
 
     <div class="defLay__content">
       <router-view class="defLay__view" v-slot='{Component}'>
-        <transition name="backAnim"><component :is="Component" /></transition>
+        <transition name="backAnim"><component
+          :is="Component" @clickOnSale="openSale" />
+        </transition>
       </router-view>
     </div>
 
@@ -34,7 +36,7 @@ export default {
   data: () => ({
     sales: [],
     salesteps: [],
-    cardData: 'NULL',
+    cardData: {},
     cardIsOpened: false,
     menuItems: [
       {id: 0, name: 'Сейчас', link: '/'},
@@ -52,6 +54,42 @@ export default {
       this.cardIsOpened = !this.cardIsOpened
       this.$refs.sideCard.toggleCard()
     },
+
+
+    openSale (sale) {
+      this.cardData = sale
+
+      setTimeout(() => {
+        this.toggleCard()
+      }, 100)
+    },
+
+    createBlankSale () {
+      let blank = {}
+      let blankRow = ['', '', '', '']
+      let blankTable = [
+        {color: '', data: blankRow},
+        {color: '', data: blankRow},
+      ]
+
+      blank = {}
+      blank.NAME = ''
+      blank.PRICE = ''
+      blank.SUPPLIER_ID = 1
+      blank.CITY = ''
+      blank.CREATE_DATE = ''
+      blank.STATUS_ID = 1
+      blank.INCOME_TABLE = JSON.stringify(blankTable)
+      blank.COSTS_TABLE = JSON.stringify(blankTable)
+      blank.TOTAL = 0
+      blank.TRACK_NUMBER = ''
+      blank.ARRIVAL_DATE = ''
+      blank.COMMENT = ''
+
+      this.cardData = blank
+      setTimeout(() => {this.toggleCard()}, 100);
+    },
+
 
     getCosts () {
       let incomeTable = this.$refs.incomeTable.getTableData()
@@ -92,7 +130,6 @@ export default {
     sales.forEach(item => this.sales.push(item))
     this.salesteps = steps
 
-    console.log(this.sales)
     this.cardData = this.sales[7]
 
     this.supps = supps

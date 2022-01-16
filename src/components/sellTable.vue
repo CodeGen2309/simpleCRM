@@ -57,36 +57,32 @@ export default {
       this.tableArr[index]['color'] = color
     },
 
-    printTable () {
-      console.log(this.tableArr)
-    },
-
     getTableData () {
-      let res
-
-      if (this.tableArr[0]['data'][0] == '') {res = null}
-      else {res = JSON.stringify(this.tableArr)}
-      return res
+      return JSON.stringify(this.tableArr)
     },
+
+    createBlankTable () {
+      let blank, blankRow
+
+      blankRow = ['', '', '', '']
+      blank = [
+        {color: '', data: blankRow},
+        {color: '', data: blankRow}
+      ]
+
+      return blank
+    },
+
 
     updateData () {
-      if (this.tableData != undefined) {
-        this.tableArr = JSON.parse(this.tableData)
+      console.log(this.tableData)
 
+      if (this.tableData == '{}') {
+        this.tableArr = this.createBlankTable()
       }
 
-      if (this.tableSize != undefined) {
-        let cols = this.tableSize[0]
-        let rows = this.tableSize[1]
-        let table = []
-
-        for (let i = 0; i < rows; i++) {
-          let row = {color: '', data: []}
-          for (let j = 0; j < cols; j++) { row.data.push('') }
-          table.push(row)
-        }
-
-        this.tableArr = table
+      else {
+        this.tableArr = JSON.parse(this.tableData)
       }
     },
   },
