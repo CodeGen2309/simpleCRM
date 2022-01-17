@@ -2,18 +2,18 @@
   <ul class="sellForm">
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">№</span>
-      <span class="sellForm__cell sellForm__cell_value">{{saleID}}</span>
+      <span class="sellForm__cell sellForm__cell_value">{{resArr.id}}</span>
     </li>
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">Товар</span>
       <span class="sellForm__cell sellForm__cell_value">
-        <input class="sellForm__input" type="text" v-model="saleName">
+        <input class="sellForm__input" type="text" v-model="resArr.name">
       </span>
     </li> 
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">Цена товара</span>
       <span class="sellForm__cell sellForm__cell_value">
-        <input class="sellForm__input" type="number" v-model="salePrice">
+        <input class="sellForm__input" type="number" v-model="resArr.price">
         <span>₽</span>
       </span>
     </li>
@@ -32,13 +32,13 @@
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">Город</span>
       <span class="sellForm__cell sellForm__cell_value">
-        <input class="sellForm__input" type="text" v-model="city">
+        <input class="sellForm__input" type="text" v-model="resArr.city">
       </span>
     </li>
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">Дата заказа</span>
       <span class="sellForm__cell sellForm__cell_value">
-        <input class="sellForm__dateInput" type="date" v-model="orderDate">
+        <input class="sellForm__dateInput" type="date" v-model="resArr.orderDate">
       </span>
     </li>
     <li class="sellForm__row">
@@ -75,12 +75,13 @@ export default {
 
     changeSelect (selectName, event) {
       this.resArr[selectName] = event.target.value
+      console.log(this.resArr)
     },
   },
 
   created () {
-    this.resArr = {
-      id: this.saleID ,
+    let resArr = {
+      id: this.saleID || null ,
       name: this.saleName,
       price: this.salePrice,
       supplier: this.supplierID,
@@ -88,6 +89,8 @@ export default {
       orderDate: this.orderDate,
       step: this.stepID
     }
+
+    this.resArr = resArr
   },
 }
 </script>

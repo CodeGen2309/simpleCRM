@@ -96,7 +96,29 @@ class dbInterface {
     $insertQuery = "INSERT INTO `SALES` (`ID`, `NAME`, `PRICE`, `SUPPLIER_ID`, `CITY`, `CREATE_DATE`, `STATUS_ID`, `INCOME_TABLE`, `COSTS_TABLE`, `TOTAL`, `TRACK_NUMBER`, `ARRIVAL_DATE`, `COMMENT`) VALUES ('$ID', '$NAME', '$PRICE', '$SUPPLIER_ID', '$CITY', '$CREATE_DATE', '$STATUS_ID', '$INCOME_TABLE', '$COSTS_TABLE', '$TOTAL', '$TRACK_NUMBER', '$ARRIVAL_DATE', '$COMMENT')";
     $insertItem = $this -> dbConn -> prepare($insertQuery);
     $res = $insertItem -> execute();
-    
+
+    return $res;
+  }
+
+  public function updateSale ($saleData) {
+    $ID = $saleData -> ID;
+    $NAME = $saleData -> NAME;
+    $PRICE = $saleData -> PRICE;
+    $SUPPLIER_ID = $saleData -> SUPPLIER_ID;
+    $CITY = $saleData -> CITY;
+    $CREATE_DATE = $saleData -> CREATE_DATE;
+    $STATUS_ID = $saleData -> STATUS_ID;
+    $INCOME_TABLE = $saleData -> INCOME_TABLE;
+    $COSTS_TABLE = $saleData -> COSTS_TABLE;
+    $TOTAL = $saleData -> TOTAL;
+    $TRACK_NUMBER = $saleData -> TRACK_NUMBER;
+    $ARRIVAL_DATE = $saleData -> ARRIVAL_DATE;
+    $COMMENT = $saleData -> COMMENT;
+
+    $updateQuery = "UPDATE `SALES` SET `NAME` = '$NAME', `PRICE` = '$PRICE', `SUPPLIER_ID` = '$SUPPLIER_ID', `CITY` = '$CITY',`CREATE_DATE` = '$CREATE_DATE', `INCOME_TABLE` = '$INCOME_TABLE', `COSTS_TABLE` = '$COSTS_TABLE', `TOTAL` = '$TOTAL', `TRACK_NUMBER` = '$TRACK_NUMBER', `ARRIVAL_DATE` = '$ARRIVAL_DATE', `COMMENT` = '$COMMENT' WHERE `SALES`.`ID` = '$ID'";
+    $updateItem = $this-> dbConn -> prepare($updateQuery);
+    $res = $updateItem -> execute();
+
     return $res;
   }
 
@@ -127,6 +149,11 @@ class dbInterface {
     if ($action == 'addSale') {
       $tableData = $postData -> tableData;
       $res = $this -> addSale($tableData);
+    }
+
+    if ($action == 'updateSale') {
+      $saleData = $postData -> saleData;
+      $res = $this -> updateSale($saleData);
     }
     
     print_r(json_encode($res));

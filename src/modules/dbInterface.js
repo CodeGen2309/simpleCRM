@@ -34,7 +34,14 @@ let inter = {
     let data = {action: 'addSale', tableData}
     let res = await this.sendRequest(data)
     return res
-  }
+  },
+
+  async updateSale (saleData) {
+    let data = {action: 'updateSale', saleData}
+    let res = await this.sendRequest(data)
+
+    return res
+  },
 }
 
 export default {

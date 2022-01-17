@@ -86,6 +86,8 @@ export default {
       blank.ARRIVAL_DATE = ''
       blank.COMMENT = ''
 
+
+
       this.cardData = blank
       setTimeout(() => {this.toggleCard()}, 100);
     },
@@ -120,6 +122,10 @@ export default {
     async getSupps () {
       return await this.$base.getTable('SUPPLIERS')
     },
+  },
+
+  print (item) {
+    console.log(item)
   },
 
   async created () {

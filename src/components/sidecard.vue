@@ -3,7 +3,7 @@
     <sellForm class='sideCard__form' ref='sellForm'
       :saleID="cardData.ID" :saleName='cardData.NAME' :salePrice="cardData.PRICE"
       :supplierID="cardData.SUPPLIER_ID" :city="cardData.CITY" :orderDate="cardData.CREATE_DATE"
-      :stepID="cardData.STATUS_ID" :stepsArr="steps" :suppsArr="suppliers">
+      :stepID="cardData.STATUS_ID" :stepsArr="steps" :suppsArr="suppliers" :key="cardData.ID">
     </sellForm>
 
     <sellTable
@@ -65,8 +65,6 @@ export default {
     toggleCard () {
       this.isOpened = !this.isOpened
 
-      console.log(this.cardData)
-
       if (this.isOpened) {
         this.$refs.incomeTable.updateData()
         this.$refs.costTable.updateData()
@@ -81,6 +79,7 @@ export default {
       let resultArr = {}
       let res
 
+      resultArr.ID = form.id
       resultArr.NAME = form.name
       resultArr.PRICE = form.price
       resultArr.SUPPLIER_ID = form.supplier
@@ -94,10 +93,13 @@ export default {
       resultArr.ARRIVAL_DATE = this.cardData.ARRIVAL_DATE
       resultArr.COMMENT = this.cardData.COMMENT
 
-      res = await this.$base.addSale(resultArr)
+      if (resultArr.ID == null) {
+        res = await this.$base.addSale(resultArr)
+      } else {
+        res = await this.$base.updateSale(resultArr)
+      }
 
-      console.log(form)
-
+      console.log(res)
       return resultArr
     },
 

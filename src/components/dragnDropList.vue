@@ -32,7 +32,7 @@ export default {
       setTimeout(() => {
         this.$emit('listChange', this.listName, this.listItems)
       }, 100);
-    }
+    },
   },
 }
 </script>

@@ -75,8 +75,6 @@ export default {
 
 
     updateData () {
-      console.log(this.tableData)
-
       if (this.tableData == '{}') {
         this.tableArr = this.createBlankTable()
       }
