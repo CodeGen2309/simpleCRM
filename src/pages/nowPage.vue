@@ -2,6 +2,7 @@
   <div class="nowPage">
     <cardList v-for="(sale, saleIndex) in sales"
       class="nowPage__step" :listIndex="saleIndex"
+      @listChanged="saveSales"
       :listName="salesteps[saleIndex]" @clickOnSale="transferSale"
       :listData="sale" :key="sale">
     </cardList>    
@@ -14,7 +15,7 @@ import cardList from '../components/cardDragList.vue'
 
 export default {
   components: {draggable, cardList},
-  emits: ['clickOnSale',],
+  emits: ['clickOnSale', ],
 
   data: () => ({
     updateCount: 0,
@@ -25,7 +26,15 @@ export default {
   methods: {
     transferSale (sale) {
       this.$emit('clickOnSale', sale)
-    }
+    },
+
+    async saveSales (list) {
+      let res
+
+      for (let sale of list) {
+        res = await this.$base.updateSale(sale)
+      }
+    },
   },
 
   async created () {
@@ -35,10 +44,8 @@ export default {
     let salesFilter = []
 
     stepsDB.forEach(item => {salesteps.push(item.NAME)})
-
     stepsDB.forEach(step => {
       salesFilter.push([])
-
       salesDB.forEach(sale => {
         if (step.ID == sale.STATUS_ID) {
           salesFilter[step.ID - 1].push(sale)

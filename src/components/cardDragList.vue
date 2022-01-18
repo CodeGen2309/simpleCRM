@@ -6,7 +6,7 @@
   </div>
   
   <draggable v-model="listData" class="cardList__sells"
-    @drop="initUpdate" @dragleave="initUpdate"
+    @drop="initUpdate"
   >
 
     <template v-slot:item='{ item }'>
@@ -26,7 +26,7 @@ import draggable from 'vue3-draggable'
 
 export default {
   props: ['listData', 'listName', 'listIndex', ],
-  emits: ['clickOnSale', ],
+  emits: ['clickOnSale', 'listChanged'],
   components: {draggable, },
   data: () => ({
     cardItems: [],
@@ -38,8 +38,9 @@ export default {
         item.STATUS_ID = this.listIndex + 1
       }
 
-      this.$emit('listChanged', this.listData, this.listIndex)
-      console.log(this.listData)
+      setTimeout(() => {
+        this.$emit('listChanged', this.listData)
+      }, 100);
     },
 
     initUpdate () {

@@ -33,6 +33,8 @@ let inter = {
   async addSale (tableData) {
     let data = {action: 'addSale', tableData}
     let res = await this.sendRequest(data)
+
+    console.log(res)
     return res
   },
 
@@ -40,6 +42,7 @@ let inter = {
     let data = {action: 'updateSale', saleData}
     let res = await this.sendRequest(data)
 
+    console.log(res)
     return res
   },
 }

@@ -23,7 +23,6 @@ export default {
   methods: {
     delItem (toDel) {
       let itemIndex = this.listItems.indexOf(toDel)
-      let deleted = this.listItems.splice(itemIndex, 1)
 
       this.onListChange()
     },

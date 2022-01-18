@@ -115,7 +115,7 @@ class dbInterface {
     $ARRIVAL_DATE = $saleData -> ARRIVAL_DATE;
     $COMMENT = $saleData -> COMMENT;
 
-    $updateQuery = "UPDATE `SALES` SET `NAME` = '$NAME', `PRICE` = '$PRICE', `SUPPLIER_ID` = '$SUPPLIER_ID', `CITY` = '$CITY',`CREATE_DATE` = '$CREATE_DATE', `INCOME_TABLE` = '$INCOME_TABLE', `COSTS_TABLE` = '$COSTS_TABLE', `TOTAL` = '$TOTAL', `TRACK_NUMBER` = '$TRACK_NUMBER', `ARRIVAL_DATE` = '$ARRIVAL_DATE', `COMMENT` = '$COMMENT' WHERE `SALES`.`ID` = '$ID'";
+    $updateQuery = "UPDATE `SALES` SET `NAME` = '$NAME', `PRICE` = '$PRICE', `SUPPLIER_ID` = '$SUPPLIER_ID', `CITY` = '$CITY', `CREATE_DATE` = '$CREATE_DATE', `INCOME_TABLE` = '$INCOME_TABLE', `COSTS_TABLE` = '$COSTS_TABLE', `TOTAL` = '$TOTAL', `STATUS_ID` = $STATUS_ID, `TRACK_NUMBER` = '$TRACK_NUMBER', `ARRIVAL_DATE` = '$ARRIVAL_DATE', `COMMENT` = '$COMMENT' WHERE `SALES`.`ID` = $ID";
     $updateItem = $this-> dbConn -> prepare($updateQuery);
     $res = $updateItem -> execute();
 
