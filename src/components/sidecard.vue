@@ -33,7 +33,12 @@
 
 
     <div class="sideCard__optButtons">
-      <button class="headNav__addButton sideCard__button" @click="saveData">Сохранить</button>
+      <button class="headNav__addButton sideCard__button"
+        :class="{'headNav__addButton_green': isSaved}"
+        @click="saveData">
+        Сохранить
+      </button>
+
       <button class="headNav__addButton sideCard__button"
         @click="$emit('closeEvent')">Закрыть
       </button>
@@ -53,6 +58,7 @@ export default {
 
   data: () => ({
     isOpened: false,
+    isSaved: false,
     totalIncome: 0,
     totalCost: 0,
   }),
@@ -99,7 +105,7 @@ export default {
         res = await this.$base.updateSale(resultArr)
       }
 
-      console.log(res)
+      this.isSaved = true
       return resultArr
     },
 
@@ -124,7 +130,7 @@ export default {
 
       this.totalIncome = income
       this.totalCost = costs
-    }
+    },
   },
 }
 </script>

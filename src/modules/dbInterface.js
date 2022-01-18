@@ -7,7 +7,7 @@ let inter = {
     let JSONData = JSON.stringify(data)
     let prodURL = 'dbinter.php'
     let devURL = 'https://gergewebdev.ru/dbinter.php'
-    let res = await this.connector.post(devURL, `data=${JSONData}`)
+    let res = await this.connector.post(prodURL, `data=${JSONData}`)
 
     return res.data
   },
@@ -33,16 +33,12 @@ let inter = {
   async addSale (tableData) {
     let data = {action: 'addSale', tableData}
     let res = await this.sendRequest(data)
-
-    console.log(res)
     return res
   },
 
   async updateSale (saleData) {
     let data = {action: 'updateSale', saleData}
     let res = await this.sendRequest(data)
-
-    console.log(res)
     return res
   },
 }
