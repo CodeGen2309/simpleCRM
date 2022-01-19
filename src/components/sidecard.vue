@@ -6,14 +6,14 @@
       :stepID="cardData.STATUS_ID" :stepsArr="steps" :suppsArr="suppliers" :key="cardData.ID">
     </sellForm>
 
-    <sellTable
+    <sellTable :color="incomeColor"
       class="sideCard__table" ref='incomeTable' tableHeader="Доходы"
       @cellChanged='onCellChange' :tableData="cardData.INCOME_TABLE">
     </sellTable>
     <p class="sideCard__priceTag">Всего: {{totalIncome}}</p>
 
     <sellTable
-      class="sideCard__table" ref="costTable"
+      class="sideCard__table" ref="costTable" :color="costsColor"
       @cellChanged='onCellChange' tableHeader="Расходы" :tableData="cardData.COSTS_TABLE">
     </sellTable>  
     <p class="sideCard__priceTag">Всего: {{totalCost}}</p>
@@ -61,6 +61,8 @@ export default {
     isSaved: false,
     totalIncome: 0,
     totalCost: 0,
+    incomeColor: '#55efc4',
+    costsColor: '#ff7675',
   }),
 
   computed: {

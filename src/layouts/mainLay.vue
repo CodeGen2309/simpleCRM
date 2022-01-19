@@ -67,10 +67,6 @@ export default {
     createBlankSale () {
       let blank = {}
       let blankRow = ['', '', '', '']
-      let blankTable = [
-        {color: '', data: blankRow},
-        {color: '', data: blankRow},
-      ]
 
       blank = {}
       blank.NAME = ''
@@ -79,8 +75,8 @@ export default {
       blank.CITY = ''
       blank.CREATE_DATE = ''
       blank.STATUS_ID = 1
-      blank.INCOME_TABLE = JSON.stringify(blankTable)
-      blank.COSTS_TABLE = JSON.stringify(blankTable)
+      blank.INCOME_TABLE = '{}'
+      blank.COSTS_TABLE = '{}'
       blank.TOTAL = 0
       blank.TRACK_NUMBER = ''
       blank.ARRIVAL_DATE = ''

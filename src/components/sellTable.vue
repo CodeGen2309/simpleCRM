@@ -8,7 +8,7 @@
 
         <span class="sTable__cell"
           v-for="(cell, cellIndex) in row.data" :key="cell"
-          :style = '{background: row.color}'
+          :style="{background: row.color}"
           :class="{
             'sTable__cell_lastRow': rowIndex == tableArr.length - 1,
             'sTable__cell_first': cellIndex == 0,
@@ -25,11 +25,6 @@
           :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1,}">
           <input class="sTable__input"  type="checkbox">
         </span>
-
-        <span class="sTable__cell sTable__cell_color"
-          :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1,}">
-          <input class="sTable__input" type="color" v-model="tableArr[rowIndex]['color']">
-        </span>
       </li>
     </ul>
   </div>
@@ -37,7 +32,7 @@
 
 <script>
 export default {
-  props: ['tableData', 'tableSize', 'tableHeader'],
+  props: ['tableData', 'tableSize', 'tableHeader', 'color'],
   emits: ['cellChanged', ],
 
   data: () => ({
@@ -47,14 +42,10 @@ export default {
   methods: {
     addRow (index) {
       let colCount = this.tableArr[0]['data'].length
-      let newRow = {color: '', data: [],}
+      let newRow = {color: this.color, data: [],}
 
       for (let i = 0; i < colCount; i++) {newRow.data.push('')}
       this.tableArr.splice(index, 0, newRow)
-    },
-
-    selectColor (index, color) {
-      this.tableArr[index]['color'] = color
     },
 
     getTableData () {
@@ -66,8 +57,8 @@ export default {
 
       blankRow = ['', '', '', '']
       blank = [
-        {color: '', data: blankRow},
-        {color: '', data: blankRow}
+        {color: this.color, data: blankRow.slice()},
+        {color: this.color, data: blankRow.slice()}
       ]
 
       return blank
@@ -87,6 +78,7 @@ export default {
 
   created () {
     this.updateData()
+    this.tableColor = this.color
   }
 }
 </script>
