@@ -7,13 +7,13 @@
     </sellForm>
 
     <sellTable :color="incomeColor"
-      class="sideCard__table" ref='incomeTable' tableHeader="Доходы"
+      class="sideCard__table" ref='incomeTable' tableHeader="Доходы" :suppsArr="suppliers"
       @cellChanged='onCellChange' :tableData="cardData.INCOME_TABLE">
     </sellTable>
     <p class="sideCard__priceTag">Всего: {{totalIncome}}</p>
 
     <sellTable
-      class="sideCard__table" ref="costTable" :color="costsColor"
+      class="sideCard__table" ref="costTable" :color="costsColor" :suppsArr="suppliers"
       @cellChanged='onCellChange' tableHeader="Расходы" :tableData="cardData.COSTS_TABLE">
     </sellTable>  
     <p class="sideCard__priceTag">Всего: {{totalCost}}</p>
@@ -52,7 +52,7 @@ import sellTable from "./sellTable.vue";
 
 
 export default {
-  emits: ['closeEvent', ],
+  emits: ['closeEvent', 'initPush'],
   props: ['cardData', 'suppliers', 'steps'],
   components: {sellForm, sellTable},
 
@@ -78,6 +78,10 @@ export default {
         this.$refs.costTable.updateData()
         this.getTotal()
       }
+    },
+
+    initPush (text, color) {
+      $this.$emit('initPush', text, color)
     },
 
     async saveData () {
@@ -107,11 +111,10 @@ export default {
         res = await this.$base.updateSale(resultArr)
       }
 
-      this.isSaved = true
-      return resultArr
+      this.$emit('initPush', 'Карточка сохранена', '#27ae60')
     },
 
-    onCellChange(row, col, value) {
+    onCellChange(col) {
       if (col == 0) {this.getTotal()}
     },
 

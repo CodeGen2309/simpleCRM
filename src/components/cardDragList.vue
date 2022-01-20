@@ -2,13 +2,12 @@
 <div class="cardList">
   <div class="cardList__header">
     <p class="cardList__title">{{listName}}</p>
-    <p class="cardList__note">25 сделок: 500 000 ₽</p>
+    <p class="cardList__note">{{count}} сделок: {{total}} ₽</p>
   </div>
   
   <draggable v-model="listData" class="cardList__sells"
     @drop="initUpdate"
   >
-
     <template v-slot:item='{ item }'>
       <div class="cardList__sellItem" @click="$emit('clickOnSale', item)">
         <p class="cardList__sellTitle">{{item.NAME}}</p>
@@ -28,9 +27,7 @@ export default {
   props: ['listData', 'listName', 'listIndex', ],
   emits: ['clickOnSale', 'listChanged'],
   components: {draggable, },
-  data: () => ({
-    cardItems: [],
-  }),
+  data: () => ({}),
 
   methods: {
     updateList () {
@@ -45,10 +42,23 @@ export default {
 
     initUpdate () {
       setTimeout(() => this.updateList(), 100);
-    }
+    },    
   },
 
-  created () {},
+  computed: {
+    total () {
+      let total = 0
+
+      for (let sale of this.listData) {total += Number(sale.TOTAL)}
+      return total
+    },
+
+    count () {
+      let count = 0
+      for (let sale of this.listData) {count++}
+      return count
+    }
+  },
 }
 </script>
 

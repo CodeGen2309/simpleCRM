@@ -5,20 +5,27 @@
 
     <div class="defLay__content">
       <router-view class="defLay__view" v-slot='{Component}'>
-        <transition name="backAnim"><component
-          :is="Component" @clickOnSale="openSale" />
+        <transition name="backAnim">
+          <component :is="Component" @clickOnSale="openSale" />
         </transition>
       </router-view>
     </div>
-
 
     <transition name = 'backAnim'>
       <div v-if="cardIsOpened" class="sideCard__back" @click="toggleCard"></div>
     </transition>
 
     <sideCard ref='sideCard' :cardData="cardData"
+      @initPush="initPush"
       :steps="salesteps" :suppliers="supps" @closeEvent="toggleCard">
     </sideCard>
+
+    <transition name="pushAnim">
+      <div class="defLay__push" v-if="pushIsActive"
+      :style="{'background': pushColor}">
+        <p class="defLay__pushText">{{pushText}}</p>
+      </div>
+    </transition>
   </section>
 </template>
 
@@ -29,15 +36,21 @@ import headNav from '../components/headNav.vue'
 import sellForm from '../components/sellForm.vue'
 import sellTable from '../components/sellTable.vue'
 import sideCard from '../components/sidecard.vue'
+import push from '../components/push.vue'
 
 export default {
-  components: { headNav, sellForm, sellTable, sideCard },
+  components: { headNav, sellForm, sellTable, sideCard, push},
   emits: [],
   data: () => ({
     sales: [],
     salesteps: [],
     cardData: {},
+    pushSwitcher: true,
     cardIsOpened: false,
+    pushText: 'HELLOOO BITHEZZZ',
+    pushIsActive: false,
+    pushColor: 'rgba(0, 0, 0, .8)',
+    pushTimeout: 2,
     menuItems: [
       {id: 0, name: 'Сейчас', link: '/'},
       {id: 1, name: 'Поток', link: '/flow'},
@@ -55,6 +68,17 @@ export default {
       this.$refs.sideCard.toggleCard()
     },
 
+    initPush (text, color) {
+      if (color) {this.pushColor = color}
+
+      this.pushText = text
+      this.pushIsActive = true
+
+      setTimeout(() => {
+        this.pushIsActive = false
+        this.pushColor = 'rgba(0, 0, 0, .8)'
+      }, this.pushTimeout*1000);
+    },
 
     openSale (sale) {
       this.cardData = sale
@@ -64,11 +88,8 @@ export default {
       }, 100)
     },
 
-    createBlankSale () {
+    createBlank () {
       let blank = {}
-      let blankRow = ['', '', '', '']
-
-      blank = {}
       blank.NAME = ''
       blank.PRICE = ''
       blank.SUPPLIER_ID = 1
@@ -82,9 +103,11 @@ export default {
       blank.ARRIVAL_DATE = ''
       blank.COMMENT = ''
 
+      return blank
+    },
 
-
-      this.cardData = blank
+    createBlankSale () {
+      this.cardData = this.createBlank()
       setTimeout(() => {this.toggleCard()}, 100);
     },
 
@@ -132,8 +155,7 @@ export default {
     sales.forEach(item => this.sales.push(item))
     this.salesteps = steps
 
-    this.cardData = this.sales[7]
-
+    this.cardData = this.createBlank()
     this.supps = supps
   },
 }
@@ -190,6 +212,29 @@ export default {
     border-bottom: 1px solid black;
   }
 
+  .defLay__push {
+    position: fixed;
+    bottom: 20px; left: 20px;
+
+    padding: 10px 20px; border-radius: 3px;
+    color: white; font-weight: 100;
+    
+    transition: .3s;
+  }
+  .defLay__pushText {
+    margin: 0; padding: 0;
+  }
+
   .backAnim-leave-active,
   .backAnim-enter-active {opacity: 0}
+
+  .pushAnim-enter-active {
+    opacity: 0;
+    transform: translateY(40px)
+  }
+
+  .pushAnim-leave-active {
+    opacity: 0;
+    transform: translateY(-40px)
+  }
 </style>

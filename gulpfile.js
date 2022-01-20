@@ -1,5 +1,20 @@
 let ftp = require('basic-ftp')
 
+async function getConn () {
+  let config, client
+
+  config = {
+    host: '31.31.198.122',
+    user: 'u1559320',
+    password: 'tkjrv6X7Ju11eAcD',
+  }
+
+  client = new ftp.Client()
+  await client.access(config)
+  
+  return client
+}
+
 
 async function deploy (done) {
   let config, client, localPath, remotePath
@@ -39,7 +54,6 @@ async function sendDBInter (done) {
   await client.close()
   done()
 }
-
 
 function testTask (done) {
   console.log("HELLO FROM GULP!!!!")

@@ -6,18 +6,30 @@
       <li class="sTable__row" v-for="(row, rowIndex) in tableArr" :key="row[0]">
         <span class="sTable__cell sTable__cell_addRow" @click="addRow(rowIndex + 1)">+</span>
 
-        <span class="sTable__cell"
-          v-for="(cell, cellIndex) in row.data" :key="cell"
-          :style="{background: row.color}"
-          :class="{
-            'sTable__cell_lastRow': rowIndex == tableArr.length - 1,
-            'sTable__cell_first': cellIndex == 0,
-          }">
-
+        <span class="sTable__cell sTable__cell_first"
+        :style = '{background: row.color}'
+        :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1}">
           <input class="sTable__input" type="text"
-            @change="$emit('cellChanged', rowIndex, cellIndex, tableArr[rowIndex]['data'][cellIndex])"
-            v-model.lazy="tableArr[rowIndex]['data'][cellIndex]"
-          >
+          @change="summChanged(rowIndex, $event.target.value)"
+          :value="row.data[0]">
+        </span>
+
+        <span class="sTable__cell"
+        :style = '{background: row.color}'
+        :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1}">
+          <select class="sTable__input" type="text"
+          @change="row.data[1] = $event.target.value">
+            <option v-for="supp in suppsArr" :value="supp.ID" :key="supp.ID"
+            :selected="supp.ID == row.data[1]">
+              {{supp.NAME}}
+            </option>
+          </select>
+        </span>
+
+        <span class="sTable__cell"
+        :style = "{background: row.color}"
+        :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1}">
+          <input class="sTable__input" type="date" :value="row.data[2]" @change="row.data[2] = $event.target.value">
         </span>
 
         <span class="sTable__cell sTable__cell_color"
@@ -32,7 +44,7 @@
 
 <script>
 export default {
-  props: ['tableData', 'tableSize', 'tableHeader', 'color'],
+  props: ['tableData', 'tableSize', 'tableHeader', 'color', 'suppsArr', 'suppID'],
   emits: ['cellChanged', ],
 
   data: () => ({
@@ -64,6 +76,12 @@ export default {
       return blank
     },
 
+    summChanged (rowIndex, value) {
+      this.tableArr[rowIndex].data[0] = value
+      console.log(this.tableArr[rowIndex].data[0])
+
+      this.$emit('cellChanged', 0)
+    },
 
     updateData () {
       if (this.tableData == '{}') {
