@@ -2,7 +2,8 @@
   <ul class="sellForm">
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">№</span>
-      <span class="sellForm__cell sellForm__cell_value">{{resArr.id}}</span>
+      <input class="sellForm__input" type="text"
+      :value="resArr.id" @change="changeID($event.target.value)">
     </li>
     <li class="sellForm__row">
       <span class="sellForm__cell sellForm__cell_title">Товар</span>
@@ -75,12 +76,17 @@ export default {
 
     changeSelect (selectName, event) {
       this.resArr[selectName] = event.target.value
-      console.log(this.resArr)
     },
+
+    changeID (item) {
+      this.resArr.oldID = this.resArr.id
+      this.resArr.id = item
+    }
   },
 
   created () {
     let resArr = {
+      oldID: this.saleID || null ,
       id: this.saleID || null ,
       name: this.saleName,
       price: this.salePrice,

@@ -89,8 +89,12 @@ export default {
       let income = await this.$refs.incomeTable.getTableData()
       let costs = await this.$refs.costTable.getTableData()
       let resultArr = {}
-      let res
+      let salesArr, checkSale, res
 
+      console.log(form)
+      console.log(form.id)
+
+      resultArr.OLD_ID = form.oldID
       resultArr.ID = form.id
       resultArr.NAME = form.name
       resultArr.PRICE = form.price
@@ -105,13 +109,22 @@ export default {
       resultArr.ARRIVAL_DATE = this.cardData.ARRIVAL_DATE
       resultArr.COMMENT = this.cardData.COMMENT
 
-      if (resultArr.ID == null) {
-        res = await this.$base.addSale(resultArr)
-      } else {
+      salesArr = await this.$base.getTable('SALES')
+      checkSale = false
+
+      for (let sale of salesArr) {
+        if (resultArr.OLD_ID == sale.ID) {checkSale = true}
+      }
+
+
+      if (checkSale) {
         res = await this.$base.updateSale(resultArr)
+      } else {
+        res = await this.$base.addSale(resultArr)
       }
 
       this.$emit('initPush', 'Карточка сохранена', '#27ae60')
+      return res
     },
 
     onCellChange(col) {
@@ -123,10 +136,11 @@ export default {
       let income = 0
       let costs = 0
 
-      
-
       incomeTable = this.$refs.incomeTable.getTableData()
       incomeTable = JSON.parse(incomeTable)
+
+      console.log(incomeTable);
+
       incomeTable.forEach(row => income += Number(row.data[0]))
 
       costsTable = this.$refs.costTable.getTableData()

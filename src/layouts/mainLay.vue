@@ -81,6 +81,7 @@ export default {
     },
 
     openSale (sale) {
+      console.log(sale)
       this.cardData = sale
 
       setTimeout(() => {
@@ -96,8 +97,8 @@ export default {
       blank.CITY = ''
       blank.CREATE_DATE = ''
       blank.STATUS_ID = 1
-      blank.INCOME_TABLE = '{}'
-      blank.COSTS_TABLE = '{}'
+      blank.INCOME_TABLE = '[]'
+      blank.COSTS_TABLE = '[]'
       blank.TOTAL = 0
       blank.TRACK_NUMBER = ''
       blank.ARRIVAL_DATE = ''

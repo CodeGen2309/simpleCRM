@@ -75,7 +75,8 @@ class dbInterface {
   }
 
   public function addSale($saleData) {
-    $ID = NULL;
+    $OLD_ID = $saleData -> OLD_ID;
+    $ID = $saleData -> ID;
     $NAME = $saleData -> NAME;
     $PRICE = $saleData -> PRICE;
     $SUPPLIER_ID = $saleData -> SUPPLIER_ID;
@@ -92,15 +93,14 @@ class dbInterface {
     if ($INCOME_TABLE == NULL) { $INCOME_TABLE = '{}'; }
     if ($COSTS_TABLE == NULL) { $COSTS_TABLE = '{}'; }
 
-
     $insertQuery = "INSERT INTO `SALES` (`ID`, `NAME`, `PRICE`, `SUPPLIER_ID`, `CITY`, `CREATE_DATE`, `STATUS_ID`, `INCOME_TABLE`, `COSTS_TABLE`, `TOTAL`, `TRACK_NUMBER`, `ARRIVAL_DATE`, `COMMENT`) VALUES ('$ID', '$NAME', '$PRICE', '$SUPPLIER_ID', '$CITY', '$CREATE_DATE', '$STATUS_ID', '$INCOME_TABLE', '$COSTS_TABLE', '$TOTAL', '$TRACK_NUMBER', '$ARRIVAL_DATE', '$COMMENT')";
     $insertItem = $this -> dbConn -> prepare($insertQuery);
     $res = $insertItem -> execute();
-
     return $res;
   }
 
   public function updateSale ($saleData) {
+    $OLD_ID = $saleData -> OLD_ID;
     $ID = $saleData -> ID;
     $NAME = $saleData -> NAME;
     $PRICE = $saleData -> PRICE;
@@ -115,10 +115,9 @@ class dbInterface {
     $ARRIVAL_DATE = $saleData -> ARRIVAL_DATE;
     $COMMENT = $saleData -> COMMENT;
 
-    $updateQuery = "UPDATE `SALES` SET `NAME` = '$NAME', `PRICE` = '$PRICE', `SUPPLIER_ID` = '$SUPPLIER_ID', `CITY` = '$CITY', `CREATE_DATE` = '$CREATE_DATE', `INCOME_TABLE` = '$INCOME_TABLE', `COSTS_TABLE` = '$COSTS_TABLE', `TOTAL` = '$TOTAL', `STATUS_ID` = $STATUS_ID, `TRACK_NUMBER` = '$TRACK_NUMBER', `ARRIVAL_DATE` = '$ARRIVAL_DATE', `COMMENT` = '$COMMENT' WHERE `SALES`.`ID` = $ID";
+    $updateQuery = "UPDATE `SALES` SET `ID` = '$ID', `NAME` = '$NAME', `PRICE` = '$PRICE', `SUPPLIER_ID` = '$SUPPLIER_ID', `CITY` = '$CITY', `CREATE_DATE` = '$CREATE_DATE', `INCOME_TABLE` = '$INCOME_TABLE', `COSTS_TABLE` = '$COSTS_TABLE', `TOTAL` = '$TOTAL', `STATUS_ID` = $STATUS_ID, `TRACK_NUMBER` = '$TRACK_NUMBER', `ARRIVAL_DATE` = '$ARRIVAL_DATE', `COMMENT` = '$COMMENT' WHERE `SALES`.`ID` = $OLD_ID";
     $updateItem = $this-> dbConn -> prepare($updateQuery);
     $res = $updateItem -> execute();
-
     return $res;
   }
 

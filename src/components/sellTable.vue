@@ -26,8 +26,7 @@
           </select>
         </span>
 
-        <span class="sTable__cell"
-        :style = "{background: row.color}"
+        <span class="sTable__cell" :style = "{background: row.color}"
         :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1}">
           <input class="sTable__input" type="date" :value="row.data[2]" @change="row.data[2] = $event.target.value">
         </span>
@@ -67,7 +66,7 @@ export default {
     createBlankTable () {
       let blank, blankRow
 
-      blankRow = ['', '', '', '']
+      blankRow = ['', '3', '', '']
       blank = [
         {color: this.color, data: blankRow.slice()},
         {color: this.color, data: blankRow.slice()}
@@ -84,13 +83,9 @@ export default {
     },
 
     updateData () {
-      if (this.tableData == '{}') {
-        this.tableArr = this.createBlankTable()
-      }
-
-      else {
-        this.tableArr = JSON.parse(this.tableData)
-      }
+      if (this.tableData == '[]') {this.tableArr = this.createBlankTable()}
+      else if (this.tableData == undefined) {this.tableArr = this.createBlankTable()}
+      else {this.tableArr = JSON.parse(this.tableData)}
     },
   },
 
