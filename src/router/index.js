@@ -7,6 +7,11 @@ const routes = [
     component: () => {return import('../pages/setupPage.vue') }
   },
   {
+    path: '/flow',
+    name: 'flow',
+    component: () => {return import('../pages/flowPage.vue') }
+  },
+  {
     path: '/',
     name: 'nowPage',
     component: () => {return import('../pages/nowPage.vue') }

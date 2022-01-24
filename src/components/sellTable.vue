@@ -86,6 +86,8 @@ export default {
       if (this.tableData == '[]') {this.tableArr = this.createBlankTable()}
       else if (this.tableData == undefined) {this.tableArr = this.createBlankTable()}
       else {this.tableArr = JSON.parse(this.tableData)}
+
+      console.log(this.tableData)
     },
   },
 

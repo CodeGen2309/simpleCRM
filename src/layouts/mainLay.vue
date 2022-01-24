@@ -81,7 +81,6 @@ export default {
     },
 
     openSale (sale) {
-      console.log(sale)
       this.cardData = sale
 
       setTimeout(() => {
