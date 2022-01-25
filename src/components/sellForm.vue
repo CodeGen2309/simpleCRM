@@ -55,6 +55,12 @@
         </select>
       </span>
     </li>
+    <li class="sellForm__row">
+      <span class="sellForm__cell sellForm__cell_title">Комментарий</span>
+      <span class="sellForm__cell sellForm__cell_value">
+        <textarea class="sellForm__textArr" type="textarea" v-model="resArr.comments"></textarea>
+      </span>
+    </li>
   </ul>
 </template>
 
@@ -62,7 +68,7 @@
 export default {
   props: [
     'saleID', 'saleName', 'salePrice', 'supplierID',
-    'city', 'orderDate', 'stepID', 'suppsArr','stepsArr'
+    'city', 'orderDate', 'stepID', 'suppsArr','stepsArr', 'comments'
   ],
 
   data: () => ({
@@ -93,7 +99,8 @@ export default {
       supplier: this.supplierID,
       city: this.city,
       orderDate: this.orderDate,
-      step: this.stepID
+      step: this.stepID,
+      comments: this.comments,
     }
 
     this.resArr = resArr
@@ -116,9 +123,14 @@ export default {
   .sellForm__cell {width: 50%}
   .sellForm__cell_title {color: gray}
   .sellForm__cell_value {}
+
   .sellForm__input {
     border: none; outline: none;
     border-bottom: 1px solid gray;
+  }
+
+  .sellForm__textArr {
+    outline: none;
   }
 
   .sellForm__select {

@@ -1,7 +1,7 @@
 <template>
   <div class="sideCard" :class="{'sideCard_closed': !isOpened}">
     <sellForm class='sideCard__form' ref='sellForm'
-      :saleID="cardData.ID" :saleName='cardData.NAME' :salePrice="cardData.PRICE"
+      :saleID="cardData.ID" :saleName='cardData.NAME' :salePrice="cardData.PRICE" :comments="cardData.COMMENT"
       :supplierID="cardData.SUPPLIER_ID" :city="cardData.CITY" :orderDate="cardData.CREATE_DATE"
       :stepID="cardData.STATUS_ID" :stepsArr="steps" :suppsArr="suppliers" :key="cardData.ID">
     </sellForm>
@@ -91,9 +91,6 @@ export default {
       let resultArr = {}
       let salesArr, checkSale, res
 
-      console.log(form)
-      console.log(form.id)
-
       resultArr.OLD_ID = form.oldID
       resultArr.ID = form.id
       resultArr.NAME = form.name
@@ -107,7 +104,7 @@ export default {
       resultArr.TOTAL = this.total
       resultArr.TRACK_NUMBER = this.cardData.TRACK_NUMBER
       resultArr.ARRIVAL_DATE = this.cardData.ARRIVAL_DATE
-      resultArr.COMMENT = this.cardData.COMMENT
+      resultArr.COMMENT = form.comments
 
       salesArr = await this.$base.getTable('SALES')
       checkSale = false

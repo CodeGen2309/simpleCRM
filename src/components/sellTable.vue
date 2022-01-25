@@ -31,6 +31,11 @@
           <input class="sTable__input" type="date" :value="row.data[2]" @change="row.data[2] = $event.target.value">
         </span>
 
+        <span class="sTable__cell" :style = "{background: row.color}"
+        :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1}">
+          <input class="sTable__input" type="text" :value="row.data[3]" @change="row.data[3] = $event.target.value">
+        </span>
+
         <span class="sTable__cell sTable__cell_color"
           :style = '{background: row.color}'
           :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1,}">
