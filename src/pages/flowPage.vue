@@ -1,18 +1,17 @@
 <template>
   <div class="flow">
-    <div class="flow__filter">
-      <span class="flow__filterText">начало периода</span>
-      <input class="flow__dateInput" type="date" v-model="filterDate[0]">
-      <span class="flow__filterText">конец периода</span>
-      <input class="flow__dateInput" type="date" v-model="filterDate[1]">
-    </div>
+    <dateFilter class="flow__filter"
+    @dateIsChanged="applyFilter">
+    </dateFilter>
 
     <sellTable ref="flowTable"
       :suppsArr="suppliers" 
-      :tableData="filterTable" :key="filterTable">
+      :tableData="tableJSON" :key="tableJSON">
     </sellTable>
 
     <div class="flow__total">
+      <p class="flow__totalState">Итого: {{totalIncome}}</p>
+      <p class="flow__totalState">Расходы: {{totalCosts}}</p>
       <p class="flow__totalState">Итого: {{total}}</p>
     </div>
   </div>
@@ -20,15 +19,13 @@
 
 <script>
 import sellTable from '../components/sellTable.vue'
+import dateFilter from '../components/dateFilter.vue'
 
 export default {
-  components: {sellTable, },
+  components: {sellTable, dateFilter},
   data: () => ({
-    table: null,
-    filterDate: ['2022-01-22', '2022-01-22'],
-    mappedData: null,
-    tableJSON: null,
-    suppliers: null,
+    table: null, mappedData: null,
+    tableJSON: null, suppliers: null,
     saleSteps: null,
   }),
 
@@ -39,57 +36,53 @@ export default {
       return total
     },
 
-    filterTable () {
-      let rowCheck, firstDate, secondDate, rowDate, filterTable
+    totalCosts () {
+      let costs, cell
+      costs = 0
 
-      filterTable = []
-      if (this.filterDate[0] == '') {
-        this.mappedData = this.table
-        return JSON.stringify(this.table)
+      for (let row of this.mappedData) {
+        cell = Number(row.data[0])
+        if (cell < 0) {costs +=  cell}
       }
 
-      for (let row of this.table) {
-        firstDate = this.filterDate[0].split('-')
-        secondDate = this.filterDate[1].split('-')
-        rowDate = row.data[2].split('-')
-        rowCheck = true
+      return costs
+    },
 
-        if (Number(rowDate[0]) < Number(firstDate[0])
-        || Number(rowDate[0]) > Number(secondDate[0]))
-        {
-          rowCheck = false
-          console.log('FIRST IS FALSE')
-        }
+    totalIncome () {
+      let costs, cell
+      costs = 0
 
-        if (Number(rowDate[1]) < Number(firstDate[1])
-        || Number(rowDate[1]) > Number(secondDate[1]))
-        {
-          rowCheck = false
-          console.log('SECOND IS FALSE')
-        }
-
-        if (Number(rowDate[2]) < Number(firstDate[2])
-        || Number(rowDate[2]) > Number(secondDate[2]))
-        {
-          rowCheck = false
-          console.log('THIRD IS FALSE')
-        }
-
-        if (rowCheck) {filterTable.push(row)}
+      for (let row of this.mappedData) {
+        cell = Number(row.data[0])
+        if (cell > 0) {costs +=  cell}
       }
 
-      this.mappedData = filterTable
-      return JSON.stringify(filterTable)
+      return costs
+
     },
   },
 
   methods: {
     print (item) {console.log(item)},
+
+    applyFilter (newDate) {
+      this.mappedData = []
+      if (newDate[1].length == 1) {newDate[1] = '0' + newDate[1]}
+
+      for (let row of this.table) {
+        let date =  row.data[2].split('-')
+        if (date[0] == newDate[0] && date[1] == newDate[1]) {
+          this.mappedData.push(row)
+        }
+
+        this.tableJSON = JSON.stringify(this.mappedData)
+      }
+    },
   },
 
   async created () {
-    let sales, saleSteps, suppliers
-    let incomeTable, costsTable, resArr
+    let sales, saleSteps, suppliers,
+    incomeTable, costsTable, resArr
 
     sales = await this.$base.getTable('SALES')
     saleSteps = await this.$base.getTable('SALESTEPS')
@@ -105,6 +98,8 @@ export default {
     }
 
     this.table = resArr
+    this.tableJSON = JSON.stringify(resArr)
+    this.mappedData = resArr
     this.suppliers = suppliers
     this.saleSteps = saleSteps
   }
@@ -114,16 +109,7 @@ export default {
 <style>
 .flow {background: #ecf0f1}
 .flow__total {margin: 20px}
-
-.flow__filter {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-}
-
-.flow__filterText {
-  font-style: italic;
-}
+.flow__filter {padding: 20px}
 
 .flow__dateInput {
   border:none; outline: none;

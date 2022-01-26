@@ -7,8 +7,6 @@
     </ul>
 
     <button class="headNav__addButton" @click='$emit("addClick")'>+ Новая сделка</button>
-
-
     <router-link class="headNav__icon" to="/setup">
       <img src="icons/gear.svg" alt="">
     </router-link>
@@ -87,7 +85,11 @@
 
   .headNav__addButton:hover {background: #66a5e1}
   .headNav__addButton_green {background: green}
+  .headNav__addButton_red {background: #c0392b}
+
+
   .headNav__addButton_green:hover {background: #2ecc71}
+  .headNav__addButton_red:hover {background: #e74c3c}
 
 
   .headNav__icon {

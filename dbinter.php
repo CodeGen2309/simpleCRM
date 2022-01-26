@@ -99,6 +99,13 @@ class dbInterface {
     return $res;
   }
 
+  public function deleteSale ($saleID) {
+    $deleteQuery = " DELETE FROM `SALES` WHERE `ID` = '$saleID' ";
+    $deleteItem = $this -> dbConn -> prepare($deleteQuery);
+    $res = $deleteItem -> execute();
+    return $res;    
+  }
+
   public function updateSale ($saleData) {
     $OLD_ID = $saleData -> OLD_ID;
     $ID = $saleData -> ID;
@@ -148,6 +155,11 @@ class dbInterface {
     if ($action == 'addSale') {
       $tableData = $postData -> tableData;
       $res = $this -> addSale($tableData);
+    }
+
+    if ($action == 'deleteSale') {
+      $saleID = $postData -> saleID;
+      $res = $this -> deleteSale($saleID);
     }
 
     if ($action == 'updateSale') {

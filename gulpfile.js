@@ -32,6 +32,7 @@ async function deploy (done) {
   await client.uploadFromDir(localPath, remotePath)
 
   console.log('uploadFinished!!')
+  await client.close()
   done()
 }
 

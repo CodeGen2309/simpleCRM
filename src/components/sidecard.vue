@@ -39,6 +39,11 @@
         Сохранить
       </button>
 
+      <button class="headNav__addButton sideCard__button headNav__addButton_red"
+      @click="deleteSale">
+        Удалить
+      </button>
+
       <button class="headNav__addButton sideCard__button"
         @click="$emit('closeEvent')">Закрыть
       </button>
@@ -81,7 +86,13 @@ export default {
     },
 
     initPush (text, color) {
-      $this.$emit('initPush', text, color)
+      this.$emit('initPush', text, color)
+    },
+
+    async deleteSale () {
+      let res = await this.$base.deleteSale(this.cardData.ID)
+      this.initPush('Заказ удален', 'red')
+      console.log(res)
     },
 
     async saveData () {
@@ -113,12 +124,8 @@ export default {
         if (resultArr.OLD_ID == sale.ID) {checkSale = true}
       }
 
-
-      if (checkSale) {
-        res = await this.$base.updateSale(resultArr)
-      } else {
-        res = await this.$base.addSale(resultArr)
-      }
+      if (checkSale) {res = await this.$base.updateSale(resultArr)}
+      else {res = await this.$base.addSale(resultArr)}
 
       this.$emit('initPush', 'Карточка сохранена', '#27ae60')
       return res

@@ -36,6 +36,12 @@ let inter = {
     return res
   },
 
+  async deleteSale (saleID) {
+    let data = {action: 'deleteSale', saleID}
+    let res = await this.sendRequest(data)
+    return res
+  },
+
   async updateSale (saleData) {
     let data = {action: 'updateSale', saleData}
     let res = await this.sendRequest(data)
