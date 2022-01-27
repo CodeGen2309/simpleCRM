@@ -48,7 +48,7 @@
         <select class="sellForm__select" @change="changeSelect('step', $event)">
           <option class="sellForm__selectItem"
             v-for="step in stepsArr" :key="step"
-            :selected="stepID == step.ID"
+            :selected="resArr.step == step.ID"
             :value="step.ID">
             {{step.NAME}}
           </option>
@@ -91,7 +91,7 @@ export default {
   },
 
   created () {
-    let resArr = {
+    this.resArr = {
       oldID: this.saleID || null ,
       id: this.saleID || null ,
       name: this.saleName,
@@ -99,11 +99,9 @@ export default {
       supplier: this.supplierID,
       city: this.city,
       orderDate: this.orderDate,
-      step: this.stepID,
+      step: this.stepID || 1,
       comments: this.comments,
     }
-
-    this.resArr = resArr
   },
 }
 </script>

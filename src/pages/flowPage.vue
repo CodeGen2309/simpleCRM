@@ -10,7 +10,7 @@
     </sellTable>
 
     <div class="flow__total">
-      <p class="flow__totalState">Итого: {{totalIncome}}</p>
+      <p class="flow__totalState">Доходы: {{totalIncome}}</p>
       <p class="flow__totalState">Расходы: {{totalCosts}}</p>
       <p class="flow__totalState">Итого: {{total}}</p>
     </div>
@@ -58,7 +58,6 @@ export default {
       }
 
       return costs
-
     },
   },
 

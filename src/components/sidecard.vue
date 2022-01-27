@@ -131,10 +131,7 @@ export default {
       return res
     },
 
-    onCellChange(col) {
-      if (col == 0) {this.getTotal()}
-    },
-
+    onCellChange(col) {if (col == 0) {this.getTotal()}},
     getTotal () {
       let incomeTable, costsTable
       let income = 0
@@ -142,9 +139,6 @@ export default {
 
       incomeTable = this.$refs.incomeTable.getTableData()
       incomeTable = JSON.parse(incomeTable)
-
-      console.log(incomeTable);
-
       incomeTable.forEach(row => income += Number(row.data[0]))
 
       costsTable = this.$refs.costTable.getTableData()
