@@ -82,8 +82,6 @@ export default {
 
     summChanged (rowIndex, value) {
       this.tableArr[rowIndex].data[0] = value
-      console.log(this.tableArr[rowIndex].data[0])
-
       this.$emit('cellChanged', 0)
     },
 
@@ -91,8 +89,6 @@ export default {
       if (this.tableData == '[]') {this.tableArr = this.createBlankTable()}
       else if (this.tableData == undefined) {this.tableArr = this.createBlankTable()}
       else {this.tableArr = JSON.parse(this.tableData)}
-
-      console.log(this.tableData)
     },
   },
 

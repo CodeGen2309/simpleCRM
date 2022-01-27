@@ -10,8 +10,8 @@
     </sellTable>
 
     <div class="flow__total">
-      <p class="flow__totalState">Доходы: {{totalIncome}}</p>
-      <p class="flow__totalState">Расходы: {{totalCosts}}</p>
+      <p class="flow__totalState">Пришло: {{totalIncome}}</p>
+      <p class="flow__totalState">Ушло: {{totalCosts}}</p>
       <p class="flow__totalState">Итого: {{total}}</p>
     </div>
   </div>
@@ -63,7 +63,6 @@ export default {
 
   methods: {
     print (item) {console.log(item)},
-
     applyFilter (newDate) {
       this.mappedData = []
       if (newDate[1].length == 1) {newDate[1] = '0' + newDate[1]}
@@ -118,9 +117,14 @@ export default {
 
 .flow__total {
   position: fixed;
-  padding: 10px;
+  padding: 10px 40px;
   border-radius: 10px;
   bottom: 20px; right: 20px;
   background: white;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, .4);
+}
+
+.flow__totalState {
+  margin: 10px 0;
 }
 </style>
