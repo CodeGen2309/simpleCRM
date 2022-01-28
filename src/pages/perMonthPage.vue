@@ -1,7 +1,13 @@
 <template>
   <div class="pmonth">
-    <p>THIS IS PER MONTH PAGE</p>
-    <pre>{{temp}}</pre>
+    <div class="pmonth__item"
+    v-for="month in salesPerMonths" :key="month">
+      <p>{{tableNames[month.checkDate]}}</p>
+
+      <sellTable :suppsArr="suppliers"
+      :tableData="JSON.stringify(month.tableData)">
+      </sellTable>
+    </div>
   </div>
 </template>
 
@@ -13,21 +19,14 @@ export default {
   data: () => ({
     sales: null,
     salesPerMonths: [],
+    suppliers: null,
     temp: [],
     monthNames: {
-      '01': 'январь',
-      '02': 'февраль',
-      '03': 'март',
-      '04': 'апрель',
-      '05': 'май',
-      '06': 'июнь',
-      '07': 'июль',
-      '08': 'авгут',
-      '09': 'сентябрь',
-      '10': 'октябрь',
-      '11': 'ноябрь',
-      '12': 'декабрь',
+      '01': 'Январь', '02': 'Февраль', '03': 'Март', '04': 'Апрель',
+      '05': 'Май', '06': 'Июнь', '07': 'Июль', '08': 'Август', '09': 'Сентябрь',
+      '10': 'Октябрь', '11': 'Ноябрь', '12': 'Декабрь'
     },
+    tableNames: {},
   }),
 
   methods: {
@@ -40,15 +39,28 @@ export default {
       for (let row of costs) {resArr.push(row)}
       return resArr
     },
+
+    createTableNames () {
+      for (let month of this.salesPerMonths) {
+        let dateArr = month.checkDate.split('-')
+        let monthName = this.monthNames[dateArr[1]]
+        let resString = `${monthName} ${dateArr[0]}`
+
+        this.tableNames[month.checkDate] = resString
+      }
+    }
   },
 
 
   async created () {
-    let sales, resTable, perMonthsArr, monthNames
+    let sales, resTable, perMonthsArr, monthNames,
+    suppliers
 
     sales = await this.$base.getTable('SALES')
+    suppliers = await this.$base.getTable('SUPPLIERS')
+
     resTable = []
-    perMonthsArr = {}
+    perMonthsArr = []
     monthNames = []
 
     for (let item of sales) {
@@ -62,23 +74,38 @@ export default {
       let monthExist = monthNames.includes(checkDate)
 
       if (date[0] == '') {continue}
-      if (monthExist) {perMonthsArr[checkDate].push(row)}
-      else {
+      if (monthExist) {
+        for (let monthItem of perMonthsArr) {
+          if (monthItem.checkDate == checkDate) {
+            monthItem.tableData.push(row)
+          }
+        }
+      }else {
         monthNames.push(checkDate)
-        perMonthsArr[checkDate] = []
-        perMonthsArr[checkDate].push(row)
+        perMonthsArr.push({checkDate, tableData: []})
+
+        for (let monthItem of perMonthsArr) {
+          if (monthItem.checkDate == checkDate) {
+            monthItem.tableData.push(row)
+          }
+        }
       }
     }
 
-    this.temp = perMonthsArr
     this.salesPerMonths = perMonthsArr
+    this.suppliers = suppliers
+    this.createTableNames()
   }
 }
 </script>
 
 <style>
 .pmonth {
-  overflow: auto;
-  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px; gap: 20px;
+}
+.pmonth__item {
+  flex-grow: 1;
 }
 </style>
