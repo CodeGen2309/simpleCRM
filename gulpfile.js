@@ -16,6 +16,18 @@ function configAxios (urlType = 'dev') {
   return res
 }
 
+function setDevURL (done) {
+  let state = configAxios('dev')
+  console.log(state)
+  done()
+}
+
+function setProdURL (done) {
+  let state = configAxios('prod')
+  console.log(state)
+  done()
+}
+
 async function getConn () {
   let config, client
 
@@ -34,8 +46,6 @@ async function getConn () {
 async function deploy (done) {
   let config, client, localPath, remotePath
 
-  configAxios('prod')
-
   localPath = './dist'
   remotePath = 'www/gergewebdev.ru'
   config = {
@@ -50,7 +60,6 @@ async function deploy (done) {
 
   console.log('uploadFinished!!')
   await client.close()
-  configAxios('dev')
   done()
 }
 
@@ -77,3 +86,5 @@ async function sendDBInter (done) {
 
 exports.deploy = deploy
 exports.sendDB = sendDBInter
+exports.setDevAx = setDevURL
+exports.setProdAx = setProdURL

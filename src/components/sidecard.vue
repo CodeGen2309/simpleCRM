@@ -45,7 +45,8 @@
       </button>
 
       <button class="headNav__addButton sideCard__button"
-        @click="$emit('closeEvent')">Закрыть
+        @click="$emit('closeEvent')">
+        Закрыть
       </button>
     </div>
   </div>
@@ -82,7 +83,6 @@ export default {
         this.$refs.incomeTable.updateData()
         this.$refs.costTable.updateData()
         this.getTotal()
-        console.log(this.payers)
       }
     },
 

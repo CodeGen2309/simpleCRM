@@ -2,11 +2,17 @@
   <div class="pmonth">
     <div class="pmonth__item"
     v-for="month in salesPerMonths" :key="month">
-      <p>{{tableNames[month.checkDate]}}</p>
+      <p class="pmonth__header">{{tableNames[month.checkDate]}}</p>
 
       <sellTable :suppsArr="payers" :forWhatArr="services"
       :tableData="JSON.stringify(month.tableData)">
       </sellTable>
+
+      <div class="pmonth__footer">
+        <p class="pmonth__footNote">Пришло: {{totals[month.checkDate]['totalIncome']}} ₽</p>
+        <p class="pmonth__footNote">Ушло: {{totals[month.checkDate]['totalCosts']}} ₽</p>
+        <p class="pmonth__footNote">Итого: {{totals[month.checkDate]['total']}} ₽</p>
+      </div>
     </div>
   </div>
 </template>
@@ -16,6 +22,7 @@ import sellTable from '../components/sellTable.vue'
 
 export default {
   components: {sellTable, },
+
   data: () => ({
     sales: null,
     salesPerMonths: [],
@@ -30,6 +37,28 @@ export default {
     },
     tableNames: {},
   }),
+
+  computed: {
+    totals () {
+      let totals = {}
+
+      for (let month of this.salesPerMonths) {
+        let resArr = {'totalIncome': 0, 'totalCosts': 0, 'total': 0}
+        let cellsArr = []
+
+        month.tableData.forEach(item => {cellsArr.push(item.data[0])})
+        cellsArr.forEach(item => {
+          if (Number(item) >= 0) {resArr.totalIncome += Number(item)}
+          else {resArr.totalCosts += Number(item)}
+        })
+
+        resArr.total = resArr.totalIncome + resArr.totalCosts
+        totals[month.checkDate] = resArr
+      }
+
+      return totals
+    }
+  },
 
   methods: {
     fetchSale (sale) {
@@ -110,8 +139,29 @@ export default {
   display: flex;
   flex-wrap: wrap;
   padding: 20px; gap: 20px;
+  background: #ecf0f1;
 }
-.pmonth__item {
-  flex-grow: 1;
+
+.pmonth__item {flex-grow: 1}
+.pmonth__header {
+  padding: 5px 20px;
+  margin: 0;
+  transition: .3s;
+}
+
+.pmonth__footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+
+  background: white;
+  border-radius: 5px;
+  margin: 10px 0 0 20px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, .3);
+  padding: 20px;
+}
+
+.pmonth__footNote {
+  padding: 0; margin: 0;
 }
 </style>

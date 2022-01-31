@@ -24,9 +24,8 @@ import dateFilter from '../components/dateFilter.vue'
 export default {
   components: {sellTable, dateFilter},
   data: () => ({
-    table: null, mappedData: null,
-    tableJSON: null, suppliers: null,
-    saleSteps: null, services: null,
+    table: null, mappedData: null, tableJSON: null,
+    suppliers: null, saleSteps: null, services: null,
     payers: null,
   }),
 
