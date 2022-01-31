@@ -57,7 +57,7 @@
 export default {
   props: [
     'tableData', 'tableSize', 'tableHeader', 'color',
-    'suppsArr', 'suppID', 'forWhatArr', 'forWhatID',
+    'suppsArr', 'suppID', 'forWhatArr', 'forWhatID', 'payers'
   ],
   emits: ['cellChanged', ],
 
@@ -100,6 +100,7 @@ export default {
       else if (this.tableData == undefined) {this.tableArr = this.createBlankTable()}
       else {this.tableArr = JSON.parse(this.tableData)}
       console.log(this.forWhatArr)
+      console.log(this.suppsArr)
     },
   },
 

@@ -1,4 +1,20 @@
 let ftp = require('basic-ftp')
+let fs = require('fs')
+
+function configAxios (urlType = 'dev') {
+  let configPath = './src/modules/testURL.json'
+  let devURl = 'https://gergewebdev.ru/dbinter.php'
+  let prodURL = 'dbinter.php'
+  let confObj = {URL: devURl}
+  let res
+
+  if (urlType == 'dev') {confObj.URL = devURl}
+  if (urlType == 'prod') {confObj.URL = prodURL}
+
+  fs.writeFileSync(configPath, JSON.stringify(confObj), 'utf-8')
+  res = fs.readFileSync(configPath, 'utf-8')
+  return res
+}
 
 async function getConn () {
   let config, client
@@ -15,9 +31,10 @@ async function getConn () {
   return client
 }
 
-
 async function deploy (done) {
   let config, client, localPath, remotePath
+
+  configAxios('prod')
 
   localPath = './dist'
   remotePath = 'www/gergewebdev.ru'
@@ -33,6 +50,7 @@ async function deploy (done) {
 
   console.log('uploadFinished!!')
   await client.close()
+  configAxios('dev')
   done()
 }
 
@@ -56,11 +74,6 @@ async function sendDBInter (done) {
   done()
 }
 
-function testTask (done) {
-  console.log("HELLO FROM GULP!!!!")
-  done()
-}
 
-exports.default = testTask
 exports.deploy = deploy
 exports.sendDB = sendDBInter

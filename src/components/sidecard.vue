@@ -6,14 +6,14 @@
       :stepID="cardData.STATUS_ID" :stepsArr="steps" :suppsArr="suppliers" :key="cardData.ID">
     </sellForm>
 
-    <sellTable :color="incomeColor" :forWhatArr="services"
-      class="sideCard__table" ref='incomeTable' tableHeader="Доходы" :suppsArr="suppliers"
+    <sellTable :color="incomeColor" :forWhatArr="services" :payers="payers"
+      class="sideCard__table" ref='incomeTable' tableHeader="Доходы" :suppsArr="payers"
       @cellChanged='onCellChange' :tableData="cardData.INCOME_TABLE">
     </sellTable>
     <p class="sideCard__priceTag">Всего: {{totalIncome}}</p>
 
     <sellTable :forWhatArr="services"
-      class="sideCard__table" ref="costTable" :color="costsColor" :suppsArr="suppliers"
+      class="sideCard__table" ref="costTable" :color="costsColor" :suppsArr="payers"
       @cellChanged='onCellChange' tableHeader="Расходы" :tableData="cardData.COSTS_TABLE">
     </sellTable>  
     <p class="sideCard__priceTag">Всего: {{totalCost}}</p>
@@ -82,6 +82,7 @@ export default {
         this.$refs.incomeTable.updateData()
         this.$refs.costTable.updateData()
         this.getTotal()
+        console.log(this.payers)
       }
     },
 

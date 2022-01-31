@@ -46,6 +46,7 @@ export default {
   data: () => ({
     sales: [],
     salesteps: [],
+    payers: null,
     cardData: {},
     pushSwitcher: true,
     cardIsOpened: false,
@@ -147,6 +148,10 @@ export default {
     async getServices () {
       return await this.$base.getTable('SERVICES')
     },
+
+    async getSupps () {
+      return await this.$base.getTable('SUPPLIERS')
+    },
   },
 
   print (item) {
@@ -158,13 +163,15 @@ export default {
     let steps = await this.getSaleSteps()
     let payers = await this.getPayers()
     let services = await this.getServices()
+    let suppliers = await this.getSupps()
 
     sales.forEach(item => this.sales.push(item))
     this.salesteps = steps
 
     this.cardData = this.createBlank()
-    this.supps = payers
+    this.supps = suppliers
     this.services = services
+    this.payers = payers
   },
 }
 </script>

@@ -1,13 +1,13 @@
 import axios from 'axios'
+import urlConfig from './testURL.json'
 
 let inter = {
   connector: axios,
+  url: urlConfig.URL,
 
   async sendRequest (data) {
     let JSONData = JSON.stringify(data)
-    let prodURL = 'dbinter.php'
-    let devURL = 'https://gergewebdev.ru/dbinter.php'
-    let res = await this.connector.post(devURL, `data=${JSONData}`)
+    let res = await this.connector.post(this.url, `data=${JSONData}`)
     return res.data
   },
 
