@@ -4,7 +4,7 @@
     v-for="month in salesPerMonths" :key="month">
       <p>{{tableNames[month.checkDate]}}</p>
 
-      <sellTable :suppsArr="suppliers"
+      <sellTable :suppsArr="payers" :forWhatArr="services"
       :tableData="JSON.stringify(month.tableData)">
       </sellTable>
     </div>
@@ -20,6 +20,8 @@ export default {
     sales: null,
     salesPerMonths: [],
     suppliers: null,
+    payers: null,
+    services: null,
     temp: [],
     monthNames: {
       '01': 'Январь', '02': 'Февраль', '03': 'Март', '04': 'Апрель',
@@ -54,10 +56,12 @@ export default {
 
   async created () {
     let sales, resTable, perMonthsArr, monthNames,
-    suppliers
+    suppliers, services, payers
 
     sales = await this.$base.getTable('SALES')
     suppliers = await this.$base.getTable('SUPPLIERS')
+    services = await this.$base.getTable('SERVICES')
+    payers = await this.$base.getTable('PAYERS')
 
     resTable = []
     perMonthsArr = []
@@ -94,6 +98,8 @@ export default {
 
     this.salesPerMonths = perMonthsArr
     this.suppliers = suppliers
+    this.services = services
+    this.payers = payers
     this.createTableNames()
   }
 }

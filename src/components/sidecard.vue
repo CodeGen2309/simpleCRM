@@ -6,13 +6,13 @@
       :stepID="cardData.STATUS_ID" :stepsArr="steps" :suppsArr="suppliers" :key="cardData.ID">
     </sellForm>
 
-    <sellTable :color="incomeColor"
+    <sellTable :color="incomeColor" :forWhatArr="services"
       class="sideCard__table" ref='incomeTable' tableHeader="Доходы" :suppsArr="suppliers"
       @cellChanged='onCellChange' :tableData="cardData.INCOME_TABLE">
     </sellTable>
     <p class="sideCard__priceTag">Всего: {{totalIncome}}</p>
 
-    <sellTable
+    <sellTable :forWhatArr="services"
       class="sideCard__table" ref="costTable" :color="costsColor" :suppsArr="suppliers"
       @cellChanged='onCellChange' tableHeader="Расходы" :tableData="cardData.COSTS_TABLE">
     </sellTable>  
@@ -58,7 +58,7 @@ import sellTable from "./sellTable.vue";
 
 export default {
   emits: ['closeEvent', 'initPush'],
-  props: ['cardData', 'suppliers', 'steps'],
+  props: ['cardData', 'suppliers', 'steps', 'payers', 'services'],
   components: {sellForm, sellTable},
 
   data: () => ({

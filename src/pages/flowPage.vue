@@ -5,7 +5,7 @@
     </dateFilter>
 
     <sellTable ref="flowTable"
-      :suppsArr="suppliers" 
+      :suppsArr="payers"  :forWhatArr="services"
       :tableData="tableJSON" :key="tableJSON">
     </sellTable>
 
@@ -26,7 +26,8 @@ export default {
   data: () => ({
     table: null, mappedData: null,
     tableJSON: null, suppliers: null,
-    saleSteps: null,
+    saleSteps: null, services: null,
+    payers: null,
   }),
 
   computed: {
@@ -79,12 +80,14 @@ export default {
   },
 
   async created () {
-    let sales, saleSteps, suppliers,
-    incomeTable, costsTable, resArr
+    let sales, saleSteps, suppliers, services,
+    incomeTable, costsTable, resArr, payers
 
     sales = await this.$base.getTable('SALES')
     saleSteps = await this.$base.getTable('SALESTEPS')
     suppliers = await this.$base.getTable('SUPPLIERS')
+    services = await this.$base.getTable('SERVICES')
+    payers = await this.$base.getTable('PAYERS')
     resArr = []
 
     for (let item of sales) {
@@ -100,6 +103,8 @@ export default {
     this.mappedData = resArr
     this.suppliers = suppliers
     this.saleSteps = saleSteps
+    this.services = services
+    this.payers = payers
   }
 }
 </script>

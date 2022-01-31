@@ -49,7 +49,7 @@ export default {
     total () {
       let total = 0
 
-      for (let sale of this.listData) {total += Number(sale.TOTAL)}
+      for (let sale of this.listData) {total += Number(sale.PRICE)}
       return total
     },
 
@@ -58,6 +58,10 @@ export default {
       for (let sale of this.listData) {count++}
       return count
     }
+  },
+
+  created () {
+    console.log(this.listData)
   },
 }
 </script>

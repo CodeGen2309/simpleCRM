@@ -31,9 +31,16 @@
           <input class="sTable__input" type="date" :value="row.data[2]" @change="row.data[2] = $event.target.value">
         </span>
 
-        <span class="sTable__cell" :style = "{background: row.color}"
+        <span class="sTable__cell"
+        :style = '{background: row.color}'
         :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1}">
-          <input class="sTable__input" type="text" :value="row.data[3]" @change="row.data[3] = $event.target.value">
+          <select class="sTable__input" type="text"
+          @change="row.data[3] = $event.target.value">
+            <option v-for="fw in forWhatArr" :value="fw.ID" :key="fw.ID"
+            :selected="fw.ID == row.data[3]">
+              {{fw.NAME}}
+            </option>
+          </select>
         </span>
 
         <span class="sTable__cell sTable__cell_color"
@@ -48,7 +55,10 @@
 
 <script>
 export default {
-  props: ['tableData', 'tableSize', 'tableHeader', 'color', 'suppsArr', 'suppID'],
+  props: [
+    'tableData', 'tableSize', 'tableHeader', 'color',
+    'suppsArr', 'suppID', 'forWhatArr', 'forWhatID',
+  ],
   emits: ['cellChanged', ],
 
   data: () => ({
@@ -89,6 +99,7 @@ export default {
       if (this.tableData == '[]') {this.tableArr = this.createBlankTable()}
       else if (this.tableData == undefined) {this.tableArr = this.createBlankTable()}
       else {this.tableArr = JSON.parse(this.tableData)}
+      console.log(this.forWhatArr)
     },
   },
 

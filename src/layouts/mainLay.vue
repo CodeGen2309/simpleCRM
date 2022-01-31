@@ -16,8 +16,10 @@
     </transition>
 
     <sideCard ref='sideCard' :cardData="cardData"
-      @initPush="initPush"
-      :steps="salesteps" :suppliers="supps" @closeEvent="toggleCard">
+      @initPush="initPush" :payers="payers"
+      :services="services"
+      :steps="salesteps" :suppliers="supps"
+      @closeEvent="toggleCard">
     </sideCard>
 
     <transition name="pushAnim">
@@ -138,8 +140,12 @@ export default {
       return await this.$base.getTable('SALESTEPS')
     },
 
-    async getSupps () {
-      return await this.$base.getTable('SUPPLIERS')
+    async getPayers () {
+      return await this.$base.getTable('PAYERS')
+    },
+
+    async getServices () {
+      return await this.$base.getTable('SERVICES')
     },
   },
 
@@ -150,13 +156,15 @@ export default {
   async created () {
     let sales = await this.getSales()
     let steps = await this.getSaleSteps()
-    let supps = await this.getSupps()
+    let payers = await this.getPayers()
+    let services = await this.getServices()
 
     sales.forEach(item => this.sales.push(item))
     this.salesteps = steps
 
     this.cardData = this.createBlank()
-    this.supps = supps
+    this.supps = payers
+    this.services = services
   },
 }
 </script>
