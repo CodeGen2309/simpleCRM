@@ -1,6 +1,7 @@
 let ftp = require('basic-ftp')
 let fs = require('fs')
 
+
 function configAxios (urlType = 'dev') {
   let configPath = './src/modules/testURL.json'
   let devURl = 'https://gergewebdev.ru/dbinter.php'
@@ -26,21 +27,6 @@ function setProdURL (done) {
   let state = configAxios('prod')
   console.log(state)
   done()
-}
-
-async function getConn () {
-  let config, client
-
-  config = {
-    host: '31.31.198.122',
-    user: 'u1559320',
-    password: 'tkjrv6X7Ju11eAcD',
-  }
-
-  client = new ftp.Client()
-  await client.access(config)
-  
-  return client
 }
 
 async function deploy (done) {

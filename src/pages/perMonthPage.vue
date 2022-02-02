@@ -1,5 +1,7 @@
 <template>
   <div class="pmonth">
+    <simpleTable :tableData="tempMonth"></simpleTable>
+
     <div class="pmonth__item"
     v-for="month in salesPerMonths" :key="month">
       <p class="pmonth__header">{{tableNames[month.checkDate]}}</p>
@@ -19,9 +21,10 @@
 
 <script>
 import sellTable from '../components/sellTable.vue'
+import simpleTable from '../components/simpleTable.vue'
 
 export default {
-  components: {sellTable, },
+  components: {sellTable, simpleTable},
 
   data: () => ({
     sales: null,
@@ -36,6 +39,7 @@ export default {
       '10': 'Октябрь', '11': 'Ноябрь', '12': 'Декабрь'
     },
     tableNames: {},
+    tempMonth: null,
   }),
 
   computed: {
@@ -79,7 +83,42 @@ export default {
 
         this.tableNames[month.checkDate] = resString
       }
-    }
+    },
+
+    createValidTable (table) {
+      let tempRow, payerCell, checker, dateCell,
+      resTable, serviceCell, priceCell
+
+      resTable = []
+
+      for (let row of table) {
+        priceCell = `${row.data[0]} ₽`
+
+        checker = this.payers[row.data[1] - 1]
+        if (checker) {payerCell = checker['NAME']}
+        else (payerCell = 'не указан')
+
+        dateCell = row.data[2].split('-')
+        dateCell = `${dateCell[2]}.${dateCell[1]}.${dateCell[0]}`
+
+        checker = this.services[row.data[3] - 1]
+        if (checker) {serviceCell = checker['NAME']}
+        else (serviceCell = 'не указан')
+
+        tempRow = {}
+        tempRow.color = row.color
+        tempRow.data = []
+
+        tempRow.data.push(priceCell)
+        tempRow.data.push(payerCell)
+        tempRow.data.push(dateCell)
+        tempRow.data.push(serviceCell)
+
+        resTable.push(tempRow)
+      }
+
+      return resTable
+    },
   },
 
 
@@ -129,6 +168,7 @@ export default {
     this.suppliers = suppliers
     this.services = services
     this.payers = payers
+    this.tempMonth = this.createValidTable(perMonthsArr[0]['tableData'])
     this.createTableNames()
   }
 }
