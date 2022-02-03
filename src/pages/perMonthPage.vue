@@ -65,13 +65,14 @@ export default {
   },
 
   methods: {
-    fetchSale (sale) {
+    fetchSale (sale, saleID) {
       let income = JSON.parse(sale.INCOME_TABLE)
       let costs = JSON.parse(sale.COSTS_TABLE)
       let resArr = []
 
       for (let row of income) {resArr.push(row)}
       for (let row of costs) {resArr.push(row)}
+      for (let row of resArr) {row.saleID = saleID}
       return resArr
     },
 
@@ -87,23 +88,23 @@ export default {
 
     createValidTable (table) {
       let tempRow, payerCell, checker, dateCell,
-      resTable, serviceCell, priceCell
+      resTable, serviceCell, priceCell, IDcell
 
       resTable = []
-
       for (let row of table) {
         priceCell = `${row.data[0]} ₽`
+        IDcell = `#${row.saleID}`
 
         checker = this.payers[row.data[1] - 1]
         if (checker) {payerCell = checker['NAME']}
-        else (payerCell = 'не указан')
-
-        dateCell = row.data[2].split('-')
-        dateCell = `${dateCell[2]}.${dateCell[1]}.${dateCell[0]}`
+        else {payerCell = 'не указан'}
 
         checker = this.services[row.data[3] - 1]
         if (checker) {serviceCell = checker['NAME']}
-        else (serviceCell = 'не указан')
+        else {serviceCell = 'не указан'}
+
+        dateCell = row.data[2].split('-')
+        dateCell = `${dateCell[2]}.${dateCell[1]}.${dateCell[0]}`
 
         tempRow = {}
         tempRow.color = row.color
@@ -113,6 +114,7 @@ export default {
         tempRow.data.push(payerCell)
         tempRow.data.push(dateCell)
         tempRow.data.push(serviceCell)
+        tempRow.data.push(IDcell)
 
         resTable.push(tempRow)
       }
@@ -136,7 +138,7 @@ export default {
     monthNames = []
 
     for (let item of sales) {
-      let saleRows = this.fetchSale(item)
+      let saleRows = this.fetchSale(item, item.ID)
       resTable.push(...saleRows)
     }
 
@@ -163,6 +165,11 @@ export default {
         }
       }
     }
+
+    for (let month of perMonthsArr) {
+      console.log(month.tableData)
+    }
+
 
     this.salesPerMonths = perMonthsArr
     this.suppliers = suppliers
