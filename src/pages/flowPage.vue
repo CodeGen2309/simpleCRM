@@ -54,10 +54,10 @@ export default {
         else {dateCell = 'не указана'}
 
 
-        if (!this.services[row.data[3]]) {servCell = 'не указан'}
+        if (!this.services[row.data[3] - 1]) {servCell = 'не указан'}
         else {servCell = this.services[row.data[3] - 1]['NAME']}
 
-        if (!this.services[row.data[1]]) {payerCell = 'не указан'}
+        if (!this.services[row.data[1] - 1]) {payerCell = 'не указан'}
         else {payerCell = this.payers[row.data[1] - 1]['NAME']}
 
         priceCell = this.$formatter.withSpaces(row.data[0])
@@ -127,6 +127,8 @@ export default {
     this.services = services
     this.payers = payers
     this.applyFilter()
+
+    console.log(services)
   }
 }
 </script>

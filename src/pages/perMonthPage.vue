@@ -165,19 +165,13 @@ export default {
       }
     }
 
-    for (let month of perMonthsArr) {
-      // console.log(month.tableData)
-    }
-
-
     this.salesPerMonths = perMonthsArr
     this.suppliers = suppliers
     this.services = services
     this.payers = payers
     this.tempMonth = this.createValidTable(perMonthsArr[0]['tableData'])
+    
     this.createTableNames()
-
-    console.log(this)
   }
 }
 </script>
