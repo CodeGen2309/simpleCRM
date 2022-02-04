@@ -1,7 +1,5 @@
 <template>
   <div class="pmonth">
-    <simpleTable :tableData="tempMonth"></simpleTable>
-
     <div class="pmonth__item"
     v-for="month in salesPerMonths" :key="month">
       <p class="pmonth__header">{{tableNames[month.checkDate]}}</p>
