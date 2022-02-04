@@ -33,6 +33,7 @@ export default {
 .simtab__cell {
   display: flex;
   align-items: center;
+  flex-grow: 1;
 
   padding: 5px 10px;
   width: 150px;

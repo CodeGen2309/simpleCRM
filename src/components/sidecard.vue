@@ -10,14 +10,14 @@
       class="sideCard__table" ref='incomeTable' tableHeader="Доходы" :suppsArr="payers"
       @cellChanged='onCellChange' :tableData="cardData.INCOME_TABLE">
     </sellTable>
-    <p class="sideCard__priceTag">Всего: {{totalIncome}}</p>
+    <p class="sideCard__priceTag">Всего: {{fNumber(totalIncome)}} ₽</p>
 
     <sellTable :forWhatArr="services"
       class="sideCard__table" ref="costTable" :color="costsColor" :suppsArr="payers"
       @cellChanged='onCellChange' tableHeader="Расходы" :tableData="cardData.COSTS_TABLE">
     </sellTable>  
-    <p class="sideCard__priceTag">Всего: {{totalCost}}</p>
-    <p class="sideCard__total">Итого: {{totalIncome + totalCost}}</p>
+    <p class="sideCard__priceTag">Всего: {{fNumber(totalCost)}} ₽</p>
+    <p class="sideCard__total">Итого: {{fNumber(totalIncome + totalCost)}} ₽</p>
 
     <ul class="sideCard__footNotes">
       <li class="sideCard__footItem">
@@ -76,6 +76,10 @@ export default {
   },
 
   methods: {
+    fNumber (number) {
+      return this.$formatter.withSpaces(Number(number))
+    },
+
     toggleCard () {
       this.isOpened = !this.isOpened
 
@@ -193,4 +197,5 @@ export default {
   }
 
   .sideCard__button {margin: 0 20px 0 0}
+  .sideCard__total {font-weight: 500;}
 </style>

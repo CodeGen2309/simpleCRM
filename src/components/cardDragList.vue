@@ -12,7 +12,7 @@
       <div class="cardList__sellItem" @click="$emit('clickOnSale', item)">
         <p class="cardList__sellTitle">{{item.NAME}}</p>
         <p class="cardList__sellId">№ {{item.ID}}</p>
-        <span class="cardList__sellPrice">{{item.PRICE}} ₽</span>
+        <span class="cardList__sellPrice">{{$formatter.withSpaces(item.PRICE)}} ₽</span>
         <p class="cardList__sellNote">{{item.COMMENT}}</p>
       </div>
     </template>
@@ -50,7 +50,7 @@ export default {
       let total = 0
 
       for (let sale of this.listData) {total += Number(sale.PRICE)}
-      return total
+      return this.$formatter.withSpaces(total)
     },
 
     count () {

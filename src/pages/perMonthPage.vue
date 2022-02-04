@@ -92,7 +92,8 @@ export default {
 
       resTable = []
       for (let row of table) {
-        priceCell = `${row.data[0]} ₽`
+        priceCell = this.$formatter.withSpaces(row.data[0])
+        priceCell = `${priceCell} ₽`
         IDcell = `#${row.saleID}`
 
         checker = this.payers[row.data[1] - 1]
@@ -111,9 +112,9 @@ export default {
         tempRow.data = []
 
         tempRow.data.push(priceCell)
-        tempRow.data.push(payerCell)
-        tempRow.data.push(dateCell)
         tempRow.data.push(serviceCell)
+        tempRow.data.push(dateCell)
+        tempRow.data.push(payerCell)
         tempRow.data.push(IDcell)
 
         resTable.push(tempRow)
@@ -167,7 +168,7 @@ export default {
     }
 
     for (let month of perMonthsArr) {
-      console.log(month.tableData)
+      // console.log(month.tableData)
     }
 
 
@@ -177,6 +178,8 @@ export default {
     this.payers = payers
     this.tempMonth = this.createValidTable(perMonthsArr[0]['tableData'])
     this.createTableNames()
+
+    console.log(this)
   }
 }
 </script>

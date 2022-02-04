@@ -4,15 +4,12 @@
     @dateIsChanged="applyFilter">
     </dateFilter>
 
-    <sellTable ref="flowTable"
-      :suppsArr="payers"  :forWhatArr="services"
-      :tableData="tableJSON" :key="tableJSON">
-    </sellTable>
+    <simpleTable class="flow__table" :tableData="mappedData"></simpleTable>
 
     <div class="flow__total">
-      <p class="flow__totalState">Пришло: {{totalIncome}}</p>
-      <p class="flow__totalState">Ушло: {{totalCosts}}</p>
-      <p class="flow__totalState">Итого: {{total}}</p>
+      <p class="flow__totalState">Пришло: {{formatToPrice(totalIncome)}} ₽</p>
+      <p class="flow__totalState">Ушло: {{formatToPrice(totalCost)}} ₽</p>
+      <p class="flow__totalState">Итого: {{formatToPrice(total)}} ₽</p>
     </div>
   </div>
 </template>
@@ -20,62 +17,80 @@
 <script>
 import sellTable from '../components/sellTable.vue'
 import dateFilter from '../components/dateFilter.vue'
+import simpleTable from '../components/simpleTable.vue'
 
 export default {
-  components: {sellTable, dateFilter},
+  components: {sellTable, dateFilter, simpleTable},
   data: () => ({
     table: null, mappedData: null, tableJSON: null,
     suppliers: null, saleSteps: null, services: null,
     payers: null,
+    totalIncome: 0,
+    totalCost: 0,
+    total: 0,
   }),
 
-  computed: {
-    total () {
-      let total = 0
-      for (let row of this.mappedData) {total += Number(row.data[0])}
-      return total
-    },
-
-    totalCosts () {
-      let costs, cell
-      costs = 0
-
-      for (let row of this.mappedData) {
-        cell = Number(row.data[0])
-        if (cell < 0) {costs +=  cell}
-      }
-
-      return costs
-    },
-
-    totalIncome () {
-      let costs, cell
-      costs = 0
-
-      for (let row of this.mappedData) {
-        cell = Number(row.data[0])
-        if (cell > 0) {costs +=  cell}
-      }
-
-      return costs
-    },
-  },
-
+  computed: {},
   methods: {
     print (item) {console.log(item)},
+
     applyFilter (newDate) {
+      let priceCell, servCell, dateCell, payerCell, IDCell,
+      currDate, formatRow, checker
+
       this.mappedData = []
+      this.totalIncome = 0
+      this.totalCost = 0
+
+      if (!newDate) {newDate = ['2022', '1']}
       if (newDate[1].length == 1) {newDate[1] = '0' + newDate[1]}
 
+
       for (let row of this.table) {
-        let date =  row.data[2].split('-')
-        if (date[0] == newDate[0] && date[1] == newDate[1]) {
-          this.mappedData.push(row)
+        currDate = row.data[2].split('-')
+        checker = currDate[0] == newDate[0] && currDate[1] == newDate[1]
+
+        if (row.data[0]) {dateCell = `${currDate[2]}.${currDate[1]}.${currDate[0]}`}
+        else {dateCell = 'не указана'}
+
+
+        if (!this.services[row.data[3]]) {servCell = 'не указан'}
+        else {servCell = this.services[row.data[3] - 1]['NAME']}
+
+        if (!this.services[row.data[1]]) {payerCell = 'не указан'}
+        else {payerCell = this.payers[row.data[1] - 1]['NAME']}
+
+        priceCell = this.$formatter.withSpaces(row.data[0])
+        priceCell = `${priceCell} ₽`
+
+        IDCell = `№ ${row.saleID}`
+
+        formatRow = {}
+        formatRow.color = row.color
+        formatRow.data = []
+
+        formatRow.data.push(priceCell)
+        formatRow.data.push(servCell)
+        formatRow.data.push(dateCell)
+        formatRow.data.push(payerCell)
+        formatRow.data.push(IDCell)
+
+        if (checker) {
+          this.mappedData.push(formatRow)
+
+          if (Number(row.data[0]) > 0 ) {this.totalIncome += Number(row.data[0])}
+          else {this.totalCost += Number(row.data[0])}
+
         }
 
-        this.tableJSON = JSON.stringify(this.mappedData)
+        this.total = this.totalIncome + this.totalCost
       }
     },
+
+    formatToPrice (number) {
+      return this.$formatter.withSpaces(number)
+    },
+
   },
 
   async created () {
@@ -93,42 +108,50 @@ export default {
       incomeTable = JSON.parse(item.INCOME_TABLE)
       costsTable = JSON.parse(item.COSTS_TABLE)
 
-      for (let row of incomeTable) {resArr.push(row)}
-      for (let row of costsTable) {resArr.push(row)}
+      for (let row of incomeTable) {
+        row.saleID = item.ID
+        resArr.push(row)
+      }
+
+      for (let row of costsTable) {
+        row.saleID = item.ID
+        resArr.push(row)
+      }
     }
 
     this.table = resArr
-    this.tableJSON = JSON.stringify(resArr)
     this.mappedData = resArr
+    this.tableJSON = JSON.stringify(resArr)
     this.suppliers = suppliers
     this.saleSteps = saleSteps
     this.services = services
     this.payers = payers
+    this.applyFilter()
   }
 }
 </script>
 
 <style>
-.flow {background: #ecf0f1}
-.flow__total {margin: 20px}
-.flow__filter {padding: 20px}
-
-.flow__dateInput {
-  border:none; outline: none;
-  border-bottom: 1px solid black;
-  background: inherit;
+.flow {
+  position: relative;
+  padding: 20px;
+  background: #ecf0f1;
 }
-
+.flow__filter {
+  margin-bottom: 20px;
+}
+.flow__table {
+  width: 800px;
+}
 .flow__total {
-  position: fixed;
-  padding: 10px 40px;
-  border-radius: 10px;
-  bottom: 20px; right: 20px;
-  background: white;
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, .4);
-}
+  position: absolute;
+  top: 0; right: 0;
+  margin: 30px;
 
-.flow__totalState {
-  margin: 10px 0;
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, .2);
 }
-</style>
+.flow__totalState {
+}</style>
