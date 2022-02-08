@@ -2,16 +2,14 @@
   <div class="pmonth">
     <div class="pmonth__item"
     v-for="month in salesPerMonths" :key="month">
-      <p class="pmonth__header">{{tableNames[month.checkDate]}}</p>
+      <p class="pmonth__header">{{month.monthName}}</p>
 
-      <sellTable :suppsArr="payers" :forWhatArr="services"
-      :tableData="JSON.stringify(month.tableData)">
-      </sellTable>
+      <simpleTable :tableData="month.sales"></simpleTable>
 
       <div class="pmonth__footer">
-        <p class="pmonth__footNote">Пришло: {{totals[month.checkDate]['totalIncome']}} ₽</p>
-        <p class="pmonth__footNote">Ушло: {{totals[month.checkDate]['totalCosts']}} ₽</p>
-        <p class="pmonth__footNote">Итого: {{totals[month.checkDate]['total']}} ₽</p>
+        <p class="pmonth__footNote">Пришло: {{month.totals.totalIncome}} ₽</p>
+        <p class="pmonth__footNote">Ушло: {{month.totals.totalCosts}} ₽</p>
+        <p class="pmonth__footNote">Итого: {{month.totals.total}} ₽</p>
       </div>
     </div>
   </div>
@@ -40,51 +38,44 @@ export default {
     tempMonth: null,
   }),
 
-  computed: {
-    totals () {
-      let totals = {}
-
-      for (let month of this.salesPerMonths) {
-        let resArr = {'totalIncome': 0, 'totalCosts': 0, 'total': 0}
-        let cellsArr = []
-
-        month.tableData.forEach(item => {cellsArr.push(item.data[0])})
-        cellsArr.forEach(item => {
-          if (Number(item) >= 0) {resArr.totalIncome += Number(item)}
-          else {resArr.totalCosts += Number(item)}
-        })
-
-        resArr.total = resArr.totalIncome + resArr.totalCosts
-        totals[month.checkDate] = resArr
-      }
-
-      return totals
-    }
-  },
-
   methods: {
-    fetchSale (sale, saleID) {
-      let income = JSON.parse(sale.INCOME_TABLE)
-      let costs = JSON.parse(sale.COSTS_TABLE)
-      let resArr = []
-
-      for (let row of income) {resArr.push(row)}
-      for (let row of costs) {resArr.push(row)}
-      for (let row of resArr) {row.saleID = saleID}
-      return resArr
-    },
-
-    createTableNames () {
-      for (let month of this.salesPerMonths) {
-        let dateArr = month.checkDate.split('-')
-        let monthName = this.monthNames[dateArr[1]]
-        let resString = `${monthName} ${dateArr[0]}`
-
-        this.tableNames[month.checkDate] = resString
+    createTableNames (datesArr) {
+      let dateArr, year, monthName, resObj
+      
+      resObj = {}
+      for (let date of datesArr) {
+        dateArr = date.split('.')
+        year = dateArr[1]
+        monthName = this.monthNames[dateArr[0]]
+        resObj[date] = `${monthName} ${year}`
       }
+
+      return resObj
     },
 
-    createValidTable (table) {
+    getMonthTotals (month) {
+      let totals, priceCell 
+
+      totals = {'totalIncome': 0, 'totalCosts': 0, 'total': 0}
+      for (let row of month) {
+        priceCell = row.data[0]
+        priceCell = priceCell.replace('₽', '')
+        priceCell = priceCell.replace(/\s+/g, '')
+        priceCell = Number(priceCell)
+
+        if (priceCell >= 0) {totals.totalIncome += priceCell}
+        else {totals.totalCosts += priceCell}
+      }
+
+      totals.total = totals.totalIncome + totals.totalCosts
+
+      totals.totalIncome = this.$formatter.withSpaces(totals.totalIncome)
+      totals.totalCosts = this.$formatter.withSpaces(totals.totalCosts)
+      totals.total = this.$formatter.withSpaces(totals.total)
+      return totals
+    },
+
+    createValidTable (table, saleID) {
       let tempRow, payerCell, checker, dateCell,
       resTable, serviceCell, priceCell, IDcell
 
@@ -92,7 +83,7 @@ export default {
       for (let row of table) {
         priceCell = this.$formatter.withSpaces(row.data[0])
         priceCell = `${priceCell} ₽`
-        IDcell = `#${row.saleID}`
+        IDcell = `#${saleID}`
 
         checker = this.payers[row.data[1] - 1]
         if (checker) {payerCell = checker['NAME']}
@@ -104,6 +95,7 @@ export default {
 
         dateCell = row.data[2].split('-')
         dateCell = `${dateCell[2]}.${dateCell[1]}.${dateCell[0]}`
+        if (dateCell == 'undefined.undefined.') {dateCell = 'не указана'}
 
         tempRow = {}
         tempRow.color = row.color
@@ -120,58 +112,66 @@ export default {
 
       return resTable
     },
+
+    createMonthsTables (salesObj, monthNames) {
+      let resArr, monthObj
+
+      resArr = []
+      for (let key in salesObj) {
+        monthObj = {}
+        monthObj.monthName = monthNames[key]
+        monthObj.sales = salesObj[key]
+        monthObj.totals = this.getMonthTotals(salesObj[key])
+        resArr.push(monthObj)
+      }
+
+      return resArr
+    },
   },
 
-
   async created () {
-    let sales, resTable, perMonthsArr, monthNames,
-    suppliers, services, payers
-
+    let sales, validSalesArr, jsonIncome, jsonCosts,
+    validIncome, validCosts, tempDate, tableName, datesArr,
+    tempSalesObj, tempArr, monthNames
+    
     sales = await this.$base.getTable('SALES')
-    suppliers = await this.$base.getTable('SUPPLIERS')
-    services = await this.$base.getTable('SERVICES')
-    payers = await this.$base.getTable('PAYERS')
+    this.suppliers = await this.$base.getTable('SUPPLIERS')
+    this.services = await this.$base.getTable('SERVICES')
+    this.payers = await this.$base.getTable('PAYERS')
 
-    resTable = []
-    perMonthsArr = []
-    monthNames = []
+    validSalesArr = []
 
-    for (let item of sales) {
-      let saleRows = this.fetchSale(item, item.ID)
-      resTable.push(...saleRows)
+    for (let sale of sales) {
+      jsonIncome = JSON.parse(sale.INCOME_TABLE)
+      jsonCosts = JSON.parse(sale.COSTS_TABLE)
+
+      validIncome = this.createValidTable(jsonIncome, sale.ID)
+      validCosts = this.createValidTable(jsonCosts, sale.ID)
+
+      validSalesArr.push(... validIncome)
+      validSalesArr.push(... validCosts)
     }
 
-    for (let row of resTable) {
-      let date = row.data[2].split('-')
-      let checkDate = `${date[0]}-${date[1]}`
-      let monthExist = monthNames.includes(checkDate)
+    datesArr = []
+    tempSalesObj = {}
 
-      if (date[0] == '') {continue}
-      if (monthExist) {
-        for (let monthItem of perMonthsArr) {
-          if (monthItem.checkDate == checkDate) {
-            monthItem.tableData.push(row)
-          }
-        }
-      }else {
-        monthNames.push(checkDate)
-        perMonthsArr.push({checkDate, tableData: []})
+    for (let row of validSalesArr) {
+      if (row.data[2] == 'не указана') {continue}
+      
+      tempDate = row.data[2].split('.')
+      tableName = `${tempDate[1]}.${tempDate[2]}`
 
-        for (let monthItem of perMonthsArr) {
-          if (monthItem.checkDate == checkDate) {
-            monthItem.tableData.push(row)
-          }
-        }
+      if (datesArr.includes(tableName)) {
+        tempSalesObj[tableName].push(row)
+      } else {
+        datesArr.push(tableName)
+        tempSalesObj[tableName] = []
+        tempSalesObj[tableName].push(row)
       }
     }
 
-    this.salesPerMonths = perMonthsArr
-    this.suppliers = suppliers
-    this.services = services
-    this.payers = payers
-    this.tempMonth = this.createValidTable(perMonthsArr[0]['tableData'])
-    
-    this.createTableNames()
+    monthNames = this.createTableNames(datesArr)
+    this.salesPerMonths = this.createMonthsTables(tempSalesObj, monthNames)
   }
 }
 </script>
@@ -184,10 +184,13 @@ export default {
   background: #ecf0f1;
 }
 
-.pmonth__item {flex-grow: 1}
+.pmonth__item {
+  width: 600px;
+  flex-grow: 1
+}
+
 .pmonth__header {
-  padding: 5px 20px;
-  margin: 0;
+  margin: 20px 0;
   transition: .3s;
 }
 
@@ -196,11 +199,12 @@ export default {
   justify-content: space-between;
   gap: 20px;
 
+  margin: 10px 0;
   background: white;
   border-radius: 5px;
-  margin: 10px 0 0 20px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, .3);
   padding: 20px;
+  transition: .3s;
 }
 
 .pmonth__footNote {
