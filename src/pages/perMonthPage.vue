@@ -28,14 +28,12 @@ export default {
     suppliers: null,
     payers: null,
     services: null,
-    temp: [],
     monthNames: {
       '01': 'Январь', '02': 'Февраль', '03': 'Март', '04': 'Апрель',
       '05': 'Май', '06': 'Июнь', '07': 'Июль', '08': 'Август', '09': 'Сентябрь',
       '10': 'Октябрь', '11': 'Ноябрь', '12': 'Декабрь'
     },
     tableNames: {},
-    tempMonth: null,
   }),
 
   methods: {
@@ -132,7 +130,7 @@ export default {
   async created () {
     let sales, validSalesArr, jsonIncome, jsonCosts,
     validIncome, validCosts, tempDate, tableName, datesArr,
-    tempSalesObj, tempArr, monthNames
+    tempSalesObj, monthNames
     
     sales = await this.$base.getTable('SALES')
     this.suppliers = await this.$base.getTable('SUPPLIERS')

@@ -4,7 +4,6 @@
 
     <ul class="sTable">
       <li class="sTable__row" v-for="(row, rowIndex) in tableArr" :key="row[0]">
-        <span class="sTable__cell sTable__cell_addRow" @click="addRow(rowIndex + 1)">+</span>
 
         <span class="sTable__cell sTable__cell_first"
         :style = '{background: row.color}'
@@ -12,23 +11,6 @@
           <input class="sTable__input" type="text"
           @change="summChanged(rowIndex, $event.target.value)"
           :value="row.data[0]">
-        </span>
-
-        <span class="sTable__cell"
-        :style = '{background: row.color}'
-        :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1}">
-          <select class="sTable__input" type="text"
-          @change="row.data[1] = $event.target.value">
-            <option v-for="supp in suppsArr" :value="supp.ID" :key="supp.ID"
-            :selected="supp.ID == row.data[1]">
-              {{supp.NAME}}
-            </option>
-          </select>
-        </span>
-
-        <span class="sTable__cell" :style = "{background: row.color}"
-        :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1}">
-          <input class="sTable__input" type="date" :value="row.data[2]" @change="row.data[2] = $event.target.value">
         </span>
 
         <span class="sTable__cell"
@@ -43,11 +25,30 @@
           </select>
         </span>
 
+        <span class="sTable__cell" :style = "{background: row.color}"
+        :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1}">
+          <input class="sTable__input" type="date" :value="row.data[2]" @change="row.data[2] = $event.target.value">
+        </span>
+
+        <span class="sTable__cell"
+        :style = '{background: row.color}'
+        :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1}">
+          <select class="sTable__input" type="text"
+          @change="row.data[1] = $event.target.value">
+            <option v-for="supp in suppsArr" :value="supp.ID" :key="supp.ID"
+            :selected="supp.ID == row.data[1]">
+              {{supp.NAME}}
+            </option>
+          </select>
+        </span>
+
         <span class="sTable__cell sTable__cell_color"
           :style = '{background: row.color}'
           :class="{'sTable__cell_lastRow': rowIndex == tableArr.length - 1,}">
           <input class="sTable__input"  type="checkbox">
         </span>
+        <span class="sTable__cell sTable__cell_addRow" @click="addRow(rowIndex + 1)">+</span>
+        <span class="sTable__cell sTable__cell_deleteRow">-</span>
       </li>
     </ul>
   </div>
@@ -116,17 +117,12 @@ export default {
   }
 
   .sTable__header {
-    margin: 10px 20px; padding: 0;
+    margin: 10px 0; padding: 0;
   }
 
-  .sTable__row {
-    display: flex;
-  }
-
-  .sTable__row:hover .sTable__cell_addRow {
-    opacity: 1;
-  }
-
+  .sTable__row {display: flex}
+  .sTable__row:hover .sTable__cell_addRow {opacity: 1}
+  .sTable__row:hover .sTable__cell_deleteRow {opacity: 1}
   .sTable__cell {
     display: flex;
     justify-content: center;
@@ -153,6 +149,21 @@ export default {
 
     border: 1px solid gainsboro;
     background: gainsboro;
+    width: 20px;
+    max-width: 20px;
+
+    cursor: pointer;
+    transition: .3s;
+    opacity: 0;
+  }
+
+  .sTable__cell_deleteRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid #e77f67;
+    background: #e77f67;
     width: 20px;
     max-width: 20px;
 
