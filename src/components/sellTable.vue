@@ -48,7 +48,7 @@
           <input class="sTable__input"  type="checkbox">
         </span>
         <span class="sTable__cell sTable__cell_addRow" @click="addRow(rowIndex + 1)">+</span>
-        <span class="sTable__cell sTable__cell_deleteRow">-</span>
+        <span class="sTable__cell sTable__cell_deleteRow" @click="deleteRow(rowIndex)">-</span>
       </li>
     </ul>
   </div>
@@ -73,6 +73,11 @@ export default {
 
       for (let i = 0; i < colCount; i++) {newRow.data.push('')}
       this.tableArr.splice(index, 0, newRow)
+    },
+
+
+    deleteRow (index) {
+      this.tableArr.splice(index, 1)
     },
 
     getTableData () {
@@ -147,8 +152,8 @@ export default {
     justify-content: center;
     align-items: center;
 
-    border: 1px solid gainsboro;
-    background: gainsboro;
+    border: 1px solid #81ecec;
+    background: #81ecec;
     width: 20px;
     max-width: 20px;
 
